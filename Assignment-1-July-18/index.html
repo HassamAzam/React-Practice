@@ -5,7 +5,15 @@
     <h1>Welcome to JSON Identifier</h1>
     <link rel="stylesheet" href="style.css" />
     <script>
-      function displayPostResponse(response) {
+      const jsonChecker = (text) => {
+        try {
+          JSON.parse(text);
+          return true;
+        } catch {
+          return false;
+        }
+      };
+      const displayPostResponse = (response) => {
         response
           .then((response) => {
             return response.json();
@@ -20,22 +28,13 @@
             document.getElementById("responseBox").innerHTML =
               "Some Error Encountered";
           });
-      }
+      };
 
-      function sendData() {
+      const sendData = () => {
         //Fetch API - POST usage
         const input = document.getElementById("inputResponse").value;
 
-        if (
-          (() => {
-            try {
-              JSON.parse(input);
-              return true;
-            } catch {
-              return false;
-            }
-          })()
-        ) {
+        if (jsonChecker(input)) {
           const data = JSON.parse(input);
 
           const response = fetch(
@@ -53,8 +52,8 @@
           document.getElementById("responseBox").innerHTML =
             "This can't be converted into JSON.";
         }
-      }
-      function displayGetResponse(response) {
+      };
+      const displayGetResponse = (response) => {
         response
           .then((data) => {
             return data.json();
@@ -71,8 +70,8 @@
           .catch((e) => {
             document.getElementById("responseBox").innerHTML = "Back-end issue";
           });
-      }
-      function searchID() {
+      };
+      const searchID = () => {
         id = document.getElementById("inputData").value;
         id = Number(id);
         if (id) {
@@ -87,7 +86,7 @@
           document.getElementById("responseBox").innerHTML =
             "Wrong format of ID";
         }
-      }
+      };
     </script>
   </head>
 
