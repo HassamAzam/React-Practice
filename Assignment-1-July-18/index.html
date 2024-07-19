@@ -5,41 +5,40 @@
     <h1>Welcome to JSON Identifier</h1>
     <link rel="stylesheet" href="style.css" />
     <script>
-      function jsonChecker(text) {
-        try {
-          JSON.parse(text);
-          return true;
-        } catch {
-          return false;
-        }
+      function displayPostResponse(response) {
+        response
+          .then((response) => {
+            return response.json();
+          })
+          .then((jsonResponse) => {
+            const uniqueId = jsonResponse.data.id;
+            document.getElementById(
+              "responseBox"
+            ).innerHTML = `Successfully added in DB with ID ${uniqueId}`;
+          })
+          .catch(() => {
+            document.getElementById("responseBox").innerHTML =
+              "Some Error Encountered";
+          });
       }
-      function displayPostResponse(response)
-    {
-      response
-            .then((response) => {
-              return response.json();
-            })
-            .then((jsonResponse) => {
-              console.log(jsonResponse);
-              let uniqueId = jsonResponse.data.id;
-              document.getElementById(
-                "responseBox"
-              ).innerHTML = `Successfully added in DB with ID ${uniqueId}`;
-              console.log("Unique ID:", uniqueId);
-            })
-            .catch(() => {
-              document.getElementById("responseBox").innerHTML =
-                "Some Error Encountered";
-            });
-        } 
-    
-      function sendData() {        //Fetch API - POST usage
-        let input = document.getElementById("inputResponse").value;
 
-        if (jsonChecker(input)) {
-          let data = JSON.parse(input);
+      function sendData() {
+        //Fetch API - POST usage
+        const input = document.getElementById("inputResponse").value;
 
-          let response = fetch(
+        if (
+          (() => {
+            try {
+              JSON.parse(input);
+              return true;
+            } catch {
+              return false;
+            }
+          })()
+        ) {
+          const data = JSON.parse(input);
+
+          const response = fetch(
             "https://dummy.restapiexample.com/api/v1/create",
             {
               method: "POST",
@@ -49,37 +48,29 @@
               body: JSON.stringify(data),
             }
           );
-          displayPostResponse(response);//sending the promise to the Display Data function
-
-        }
-        else {
+          displayPostResponse(response); //sending the promise to the Display Data function
+        } else {
           document.getElementById("responseBox").innerHTML =
             "This can't be converted into JSON.";
         }
       }
-      function displayGetResponse(response)
-      {
+      function displayGetResponse(response) {
         response
-            .then((data) => {
-              console.log("After first then: ", data);
-              return data.json();
-            })
-            .then((bodyData) => {
-              console.log(bodyData);
+          .then((data) => {
+            return data.json();
+          })
+          .then((bodyData) => {
+            dataObj = {
+              name: bodyData.data.employee_name,
+              id: bodyData.data.id,
+            };
 
-              dataObj = {
-                name: bodyData.data.employee_name,
-                id: bodyData.data.id,
-              };
-              console.log(dataObj);
-              document.getElementById("dataAgainstId").innerHTML =
-                "Name: " + dataObj.name + " | Id: " + bodyData.data.id;
-            })
-            .catch((e) => {
-              document.getElementById("responseBox").innerHTML =
-                "Back-end issue";
-              console.log(e);
-            });
+            document.getElementById("dataAgainstId").innerHTML =
+              "Name: " + dataObj.name + " | Id: " + bodyData.data.id;
+          })
+          .catch((e) => {
+            document.getElementById("responseBox").innerHTML = "Back-end issue";
+          });
       }
       function searchID() {
         id = document.getElementById("inputData").value;
@@ -90,11 +81,8 @@
             response = fetch(
               `https://dummy.restapiexample.com/api/v1/employee/${id}`
             );
-          } catch (e) {
-            console.log("Fetch Error", e);
-          }
+          } catch (e) {}
           displayGetResponse(response);
-          
         } else {
           document.getElementById("responseBox").innerHTML =
             "Wrong format of ID";
