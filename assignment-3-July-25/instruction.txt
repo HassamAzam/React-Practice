@@ -1,0 +1,22 @@
+// use functional programming done
+    // use constructor function when its absolute nesscarry done
+    add event listeners
+    // discourage using inline styling 
+    // create another css file and import it like we imported script in head
+
+    use destructuting
+     // stop timer, start watch, stop watch
+     // use desturturing
+    
+    // short hand
+    // if (obj.minutes === 0 && obj.seconds <= 0) return
+    // if (obj.minutes === 0 && obj.seconds <= 0) 
+    //  a = b
+    // const a = () =>  a + b; is equlent to const a = () => {return a + b}
+    // for (let i = 0; i < 5;i++ ) console.log(i);
+    // we can avoid parathasis, if we have only single parameter
+// const stopTimer = a => console.log(a);
+
+
+
+
