@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div id="welcomeMessage">
+    <p id="welcomeMessage">Welcome To Dashboard</p>
+</div>
+<div id="updateDetails">
+    <p>Please enter details that you want to modify</p>
+    </div>
+
+
+    <form id="updateForm" class="ui form">
+
+
+        <label for="fname">First name:</label><br>
+        <input type="text" id="fname" name="fname"><br>
+        <label for="lname">Last name:</label><br>
+        <input type="text" id="lname" name="lname"><br>
+        <label for="password">Password</label><br>
+        <input type="password" id="password" name="password"><br>
+        <label for="username">Username</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="dob">Date of Birth</label><br>
+        <input type="date" id="dob" name="dob"><br>
+        <label for="address">Address</label><br>
+        <input type="text" id="address" name="address"><br><br>
+        <input id ="submit" type="submit" id="submitButton">
+   
+    </form>
+    </div>
+    <script>
+        const userObj = JSON.parse(localStorage.getItem('currentUser'));
+        console.log(userObj);
+        const oldKey=userObj.username;
+        console.log(oldKey);
+        document.getElementById('welcomeMessage').innerHTML = `Welcome ${userObj.username}`;
+        const updateForm = document.getElementById("updateForm");
+
+        updateForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(updateForm);
+            const formObj = Object.fromEntries(formData);
+            const username = formObj.username;
+            if (localStorage.getItem(username)) {
+                alert("User with this username already exists");
+            } else {
+                
+                localStorage.setItem(username, JSON.stringify(formObj));
+                alert("Successfully Updated");
+                
+                localStorage.removeItem(oldKey);
+                localStorage.removeItem('currentUser');
+
+                
+                window.location.href = "/index.html";
+            }
+        });
+    </script>
+</body>
+</html>
