@@ -1,0 +1,45 @@
+
+#createButton {
+    margin-left: 50%;
+    border-radius: 30%;
+    height: 50px;
+    color: white;
+    background-color: purple;
+}
+
+
+.timerDiv {
+    width: 50px;
+    height: 70px;
+    background: white;
+    color: purple;
+    margin-left: 48.5%;
+    padding: 50px;
+    border-radius: 30%;
+    border: 2px solid purple;
+    text-align: center;
+}
+
+
+.startButton {
+    background: purple;
+    color: white;
+    margin: 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+.stopButton{
+    background: purple;
+    color: white;
+    margin: 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+
+}
+
+.timerDisplay {
+    margin-left: 10%;
+    font-size: 150%;
+}
