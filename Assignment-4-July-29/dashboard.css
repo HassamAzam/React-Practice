@@ -1,0 +1,39 @@
+body {
+    background-image: url("back.jpg");
+    
+  }
+#welcomeMessage
+{
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    margin-left: 45%;
+    margin-bottom: 10%;
+    
+}
+p{
+    width: fit-content;
+    margin-right: 20;
+    color: white;
+    margin-left: 35%;
+    font-weight: bold;
+    font-size: 30px;
+    background-color: blueviolet;
+    
+}
+#updateForm{
+    color: white;
+max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+    
+
+
+
+}
+
+#submit{
+    background-color: aqua;
+    color: black;
+
+}
