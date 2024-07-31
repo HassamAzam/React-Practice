@@ -1,0 +1,79 @@
+.navbar
+{
+    background-color: #1f1f1f;
+    color:white;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    
+}
+.navLeft
+{
+margin-left: 40px;
+margin-top: 20px;
+}
+.navCenter
+{
+    margin-top: 20px;
+   
+}
+.left{
+    margin-top: 20px;
+}
+.centerItems
+{
+display: flex;
+gap:30px;
+
+}
+.navRight{
+    display: flex;
+    margin-top: 20px;
+      
+}
+.searchImage
+{
+    height: 20px;
+    margin-right: 20px;
+}
+.cartImage
+{
+    height:20px;
+    margin-right: 10px;
+}
+.p1
+{
+    font-size: 70px;
+    justify-content: center;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.box-2
+{
+    display:flex;
+}
+.yellowBox
+{
+    background-color: yellow;
+    height: 300px;
+    width: 500px;
+}
+.p2
+{
+    margin-top: 10px;
+    padding: 30px;
+}
+.clientBox
+{
+    display: flex;
+    gap:30px;
+    justify-content: center;
+   
+}
+.peopleNumber>p
+{
+text-align: center;
+font-weight:bold;
+
+}
