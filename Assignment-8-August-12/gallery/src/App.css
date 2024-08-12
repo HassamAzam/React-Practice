@@ -1,0 +1,50 @@
+.imageContainer {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.imageContainer img {
+  max-width: 200px;
+  height: auto;
+}
+
+.imageContainer p {
+  text-align: center;
+  margin: 5px 0;
+}
+
+.imageContainer button {
+  display: block;
+  margin: 5px auto;
+}
+  
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+}
+
+.popup input {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.popup button {
+  margin-right: 5px;
+}
+.uploadBox {
+  text-align: center;
+}
+
+.imageGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
