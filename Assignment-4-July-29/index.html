@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"></script>
+    <div id="login">
+    <div class="ui container" id="loginMessage">
+        <div id="welcomediv">
+       <h1 id="welcomeMessage"> Welcome to the Login Page</h1>
+    </div>
+    </div>
+    <form id="submitForm">
+        
+        <label for="username">User Name</label><br>
+        <div class="ui input">
+            <input required class ="ui input" equired type="text" id="username" name="username"><br>
+        
+        </div><br>
+        <label for="password">Password</label><br>
+        <div class="ui input">
+            <input required type="password" id="password" name="password"><br>
+        </div>
+        <br>
+        
+       
+        <input class="ui input green button"type="submit" id="submitButton" value="Login"><br><br>
+        <div  id = "registeHereButton">
+        <button class="ui blue button"  type="button" id="openFormButton">Not have an account? <br>Register here</button>
+    </div>
+    </form>
+</div>
+    <div class="form-popup" id="registerForm" style="display:none;">
+        <form class="form-container" id="registerFormContainer">
+            <label for="fname">First name:</label><br>
+            <input required type="text" id="fname" name="fname"><br>
+            <label for="lname">Last name:</label><br>
+            <input required type="text" id="lname" name="lname"><br>
+            <label for="regPassword">Password</label><br>
+            <input required type="password" id="regPassword" name="password"><br>
+            <label for="regUsername">Username</label><br>
+            <input required type="text" id="regUsername" name="username"><br>
+            <label for="dob">Date of Birth</label><br>
+            <input required type="date" id="dob" name="dob"><br>
+            <label for="address">Address</label><br>
+            <input required type="text" id="address" name="address"><br>
+            <button type="submit" class="btn">Register</button>
+            <button type="button" id="closeFormButton" class="btn cancel">Close</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitForm = document.getElementById("submitForm");
+            const registerForm = document.getElementById("registerForm");
+            const registerFormContainer = document.getElementById("registerFormContainer");
+            const openFormButton = document.getElementById("openFormButton");
+            const closeFormButton = document.getElementById("closeFormButton");
+
+            submitForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const formData = new FormData(submitForm);
+                let userObj = localStorage.getItem(formData.get('username'));
+                userObj = JSON.parse(userObj);
+                if (userObj) {
+                    if (userObj.password === formData.get('password')) {
+                        localStorage.setItem('currentUser', JSON.stringify(userObj));
+                        alert("Login Successful");
+                        window.location.href = "/dashboard.html";
+                    } else {
+                        alert("Wrong Password");
+                    }
+                } else {
+                    alert("User not found");
+                }
+            });
+
+            openFormButton.addEventListener('click', () => {
+                registerForm.style.display = "block";
+            });
+
+            closeFormButton.addEventListener('click', () => {
+                registerForm.style.display = "none";
+            });
+
+            registerFormContainer.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(registerFormContainer);
+                const formObj = Object.fromEntries(formData);
+                const username = formObj.username;
+                if (localStorage.getItem(username)) {
+                    alert("User with this username already exists");
+                } else {
+                    localStorage.setItem(username, JSON.stringify(formObj));
+                    alert("Successfully Registered");
+                    registerForm.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
