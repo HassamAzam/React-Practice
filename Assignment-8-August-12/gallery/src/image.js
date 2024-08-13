@@ -17,13 +17,11 @@ class ImageDisplay extends Component {
     this.setState({ imageName: e.target.value });
   };
 
-  handlePopupClose = () => {
-    this.setState({ showPopup: false });
-  };
+ 
 
   handlePopupSubmit = () => {
-    if (this.state.imageName.trim() !== "") {
-      this.handlePopupClose(); 
+    if (this.state.imageName.trim()) {
+      this.setState({ showPopup: false });
     }
   };
 
@@ -36,14 +34,14 @@ class ImageDisplay extends Component {
   };
 
   render() {
-    const { imgSrc, index, handleDelete } = this.props;
+    const { imgSrc, handleDelete } = this.props;
     const { imageName, showPopup } = this.state;
 
     return (
       <div className="imageContainer">
         <img src={imgSrc} alt={imageName} />
         <p>{imageName}</p>
-        <button onClick={() => handleDelete(index)}>Delete</button>
+        <button onClick={handleDelete}>Delete</button>
         <button onClick={this.handleUpdate}>Update</button>
         <button onClick={this.handleDownload}>Download</button>
 

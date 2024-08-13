@@ -5,52 +5,57 @@ export default class Upload extends Component {
   constructor() {
     super();
     this.state = {
-      arr: [],
-      images: [],
+      imageArray: [],
+      tempImageArray: [],
+     
     };
   }
 
   handleInput = (e) => {
     const files = Array.from(e.target.files);
-    this.setState({ images: files });
+    this.setState({ tempImageArray: files });
   };
 
   handleUpload = () => {
-    const { images } = this.state;
-
-    if (images.length > 0) {
+    console.log("Inside HandelUPload")
+    const { tempImageArray} = this.state;
+    console.log(tempImageArray.length)
+    if (tempImageArray.length > 0) {
       const newImages = [];
-
-      images.forEach((file) => {
+      console.log("NewArray Created")
+      tempImageArray.forEach((file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           newImages.push(e.target.result);
-
-          if (newImages.length === images.length) {
+          console.log("Pushing")
+          if (newImages.length === tempImageArray.length) {
             this.setState((prevState) => ({
-              arr: [...prevState.arr, ...newImages],
-              images: [],
+              imageArray: [...prevState.imageArray, ...newImages],
+              tempImageArray: [],
+             
             }));
           }
         };
         reader.readAsDataURL(file);
+        console.log("File Read")
       });
     }
   };
 
   handleDelete = (index) => {
     this.setState((prevState) => ({
-      arr: prevState.arr.filter((picObj, picIndex) => picIndex !== index),
+      imageArray: prevState.imageArray.filter((picObj, picIndex) => picIndex !== index),
     }));
   };
 
   clearImages = () => {
     this.setState({
-      arr: [],
+      imageArray: [],
     });
   };
 
   render() {
+    let count=0;
     return (
       <div className="uploadBox">
         <input
@@ -63,14 +68,17 @@ export default class Upload extends Component {
         <button onClick={this.clearImages}>Clear</button>
 
         <div className="imageGallery">
-          {this.state.arr.map((imgSrc, index) => (
+          {this.state.imageArray.map((imgSrc,index) => (
             <ImageDisplay
-              key={index}
+              key={count++}
               imgSrc={imgSrc}
               index={index}
-              handleDelete={this.handleDelete}
+              handleDelete={()  => this.handleDelete(index)}
             />
-          ))}
+          ))
+          
+          }
+          
         </div>
       </div>
     );
