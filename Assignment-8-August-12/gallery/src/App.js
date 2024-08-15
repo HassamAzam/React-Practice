@@ -4,7 +4,7 @@ import Upload from './upload';
 function App() {
   return (
     <div className="App">
-      <Upload/>
+      <Upload></Upload>
     </div>
   );
 }

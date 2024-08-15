@@ -4,7 +4,7 @@ class ImageDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageName: `Uploaded ${this.props.index}`, 
+      imageName: `Uploaded ${props.id}`, 
       showPopup: false, 
     };
   }
@@ -17,10 +17,10 @@ class ImageDisplay extends Component {
     this.setState({ imageName: e.target.value });
   };
 
- 
+
 
   handlePopupSubmit = () => {
-    if (this.state.imageName.trim()) {
+    if (this.state.imageName.trim() !== "") {
       this.setState({ showPopup: false });
     }
   };
@@ -33,15 +33,20 @@ class ImageDisplay extends Component {
     link.click();
   };
 
+  handleRotate = () => {
+    const { id, rotateMatrix } = this.props;
+    rotateMatrix(id); 
+  };
+
   render() {
-    const { imgSrc, handleDelete } = this.props;
+    const { imgSrc, id, handleDelete } = this.props;
     const { imageName, showPopup } = this.state;
 
     return (
       <div className="imageContainer">
         <img src={imgSrc} alt={imageName} />
         <p>{imageName}</p>
-        <button onClick={handleDelete}>Delete</button>
+        <button onClick={() => handleDelete(id)}>Delete</button>
         <button onClick={this.handleUpdate}>Update</button>
         <button onClick={this.handleDownload}>Download</button>
 
@@ -55,6 +60,7 @@ class ImageDisplay extends Component {
             />
             <button onClick={this.handlePopupSubmit}>Submit</button>
             <button onClick={this.handlePopupClose}>Cancel</button>
+            <button onClick={this.handleRotate}>Rotate</button>
           </div>
         )}
       </div>
