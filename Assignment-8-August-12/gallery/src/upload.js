@@ -6,16 +6,16 @@ export default class Upload extends Component {
   constructor() {
     super();
     this.state = {
-      tempImageArray: [],        
-      matrices: [],   
-      images: [],     
+      tempImageArray: [],
+      matrices: [],
+      images: [],
     };
   }
 
   handleInput = (e) => {
-    const files = Array.from(e.target.files).map(file => ({
+    const files = Array.from(e.target.files).map((file) => ({
       file,
-      id: uniqid() 
+      id: uniqid(),
     }));
     this.setState({ images: files });
   };
@@ -63,8 +63,8 @@ export default class Upload extends Component {
       reader.onerror = (error) => reject(error);
 
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
@@ -98,15 +98,14 @@ export default class Upload extends Component {
 
     if (!matrixEntry || !imgEntry) return;
 
-    
     const imgSrc = imgEntry.src;
 
     const img = new Image();
     img.src = imgSrc;
 
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       const width = img.width;
       const height = img.height;
       canvas.width = height;
@@ -117,7 +116,7 @@ export default class Upload extends Component {
       ctx.drawImage(img, -width / 2, -height / 2);
 
       const rotatedImgSrc = canvas.toDataURL();
-      const newMatrices = matrices.map(entry =>
+      const newMatrices = matrices.map((entry) =>
         entry.id === id
           ? { ...entry, matrix: this.fileToMatrix(new Blob([rotatedImgSrc])) }
           : entry
@@ -150,8 +149,8 @@ export default class Upload extends Component {
               key={imgObj.id}
               imgSrc={imgObj.src}
               id={imgObj.id}
-              handleDelete={this.handleDelete}
-              rotateMatrix={this.rotateMatrix} 
+              handleDelete={() => this.handleDelete(imgObj.id)}
+              rotateMatrix={this.rotateMatrix}
             />
           ))}
         </div>
