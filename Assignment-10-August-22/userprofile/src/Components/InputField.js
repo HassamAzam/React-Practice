@@ -1,6 +1,5 @@
 import React from "react";
 import { TextField } from "@mui/material";
-//proptype reactHookForm  
 const InputField = ({ label, placeholder, type = "text", ...props }) => {
   return (
     <TextField
