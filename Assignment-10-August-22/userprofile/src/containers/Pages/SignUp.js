@@ -3,19 +3,24 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, FormGroup, FormControl } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+
 import SelectCountry from "../../Components/SelectCountry";
 import InputField from "../../Components/InputField";
 import ButtonComponent from "../../Components/ButtonComponent";
 import { addInArray } from "../../Store/userArraySlice";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-
 
 const validationSchema = Yup.object({
-  firstName: Yup.string('Enter a string').required("First Name is required"),
+  firstName: Yup.string("Enter a string").required("First Name is required"),
   lastName: Yup.string().required("Last Name is required"),
-  email: Yup.string().email("Invalid email format").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
   country: Yup.string().required("Country is required"),
 });
 
@@ -24,13 +29,20 @@ function SignUp() {
   const dispatch = useDispatch();
   const userArray = useSelector((state) => state.userArray.value);
 
-  const initialValues = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    country: "America",
-  };
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      country: "",
+    },
+  });
 
   const handleClose = () => {
     navigate("/login");
@@ -40,7 +52,7 @@ function SignUp() {
     return userArray.some((user) => user.email === email);
   };
 
-  const handleSubmit = (values) => {
+  const onSubmit = (values) => {
     if (checkIfUserExists(values.email)) {
       toast.error("User Already Exists");
     } else {
@@ -58,80 +70,99 @@ function SignUp() {
         aria-describedby="registration-form-description"
       >
         <div className="formContainer">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ errors, touched }) => (
-              <Form className="form">
-                <FormGroup className="formFields">
-                  <FormControl>
-                    <Field
-                      name="firstName"
-                      as={InputField}
+          <form onSubmit={handleSubmit(onSubmit)} className="form">
+            <FormGroup className="formFields">
+              <FormControl>
+                <Controller
+                  name="firstName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      {...field}
                       label="First Name"
-                      error={touched.firstName && !!errors.firstName}
-                      helperText={touched.firstName && errors.firstName}
+                      error={!!errors.firstName}
+                      helperText={errors.firstName?.message}
                     />
-                  </FormControl>
-                  <FormControl>
-                    <Field
-                      name="lastName"
-                      as={InputField}
+                  )}
+                />
+              </FormControl>
+              <FormControl>
+                <Controller
+                  name="lastName"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      {...field}
                       label="Last Name"
-                      error={touched.lastName && !!errors.lastName}
+                      error={!!errors.lastName}
+                      helperText={errors.lastName?.message}
                     />
-                  </FormControl>
-                  <FormControl>
-                    <Field
-                      name="email"
-                      as={InputField}
+                  )}
+                />
+              </FormControl>
+              <FormControl>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      {...field}
                       label="Email"
                       type="email"
-                      error={touched.email && !!errors.email}
-                      helperText={touched.email  &&errors.email}
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
                     />
-                  </FormControl>
-                  <FormControl>
-                    <Field
-                      name="password"
-                      as={InputField}
+                  )}
+                />
+              </FormControl>
+              <FormControl>
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <InputField
+                      {...field}
                       label="Password"
                       type="password"
-                      error={touched.password && !!errors.password}
-                      helperText={touched.password && errors.password}
+                      error={!!errors.password}
+                      helperText={errors.password?.message}
                     />
-                  </FormControl>
-                  <FormControl fullWidth>
-                    <Field
-                      name="country"
-                      as={SelectCountry}
+                  )}
+                />
+              </FormControl>
+              <FormControl fullWidth>
+                <Controller
+                  name="country"
+                  control={control}
+                  render={({ field }) => (
+                    <SelectCountry
+                      {...field}
                       label="Country"
-                      error={touched.country && !!errors.country}
-                      helperText={touched.country && errors.country}
+                      error={!!errors.country}
+                      helperText={errors.country?.message}
                     />
-                  </FormControl>
-                  <FormControl>
-                    <ButtonComponent
-                      variant="contained"
-                      color="secondary"
-                      type="submit"
-                      label="Submit"
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <ButtonComponent
-                      variant="outlined"
-                      color="secondary"
-                      onClick={handleClose}
-                      label="Close"
-                    />
-                  </FormControl>
-                </FormGroup>
-              </Form>
-            )}
-          </Formik>
+                  )}
+                />
+              </FormControl>
+              <FormControl>
+                <ButtonComponent
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  label="Submit"
+                  disabled={isSubmitting}
+                />
+              </FormControl>
+              <FormControl>
+                <ButtonComponent
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleClose}
+                  label="Close"
+                />
+              </FormControl>
+            </FormGroup>
+          </form>
         </div>
       </Modal>
       <ToastContainer />

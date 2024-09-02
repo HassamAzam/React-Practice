@@ -4,13 +4,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from "react-router-dom";
 import { FormGroup, FormControl } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 import { login } from "../../Store/authSlice";
-
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email format").required("Email is required"),
@@ -22,10 +22,13 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const initialValues = {
-    email: "",
-    password: "",
-  };
+  const {handleSubmit,control,  formState: { errors }} = useForm({  
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const handleLogin = (values) => {
     const user = userArray.find((user) => user.email === values.email);
@@ -49,59 +52,61 @@ export default function Login() {
   return (
     <div className="LoginFormContainer">
       <h1>Login</h1>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleLogin}
-      >
-        {({ errors, touched }) => (
-          <Form className="formFields">
-            <FormGroup>
-              <FormControl>
-                <Field
-                  name="email"
-                  as={InputField}
+      <form onSubmit={handleSubmit(handleLogin)} className="formFields">
+        <FormGroup>
+          <FormControl>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  {...field}
                   label="Email"
                   type="email"
-                  error={touched.email && !!errors.email}
-                  helperText={touched.email && errors.email}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
                 />
-                <br/>
-              </FormControl>
-              <FormControl>
-                <Field
-                  name="password"
-                  as={InputField}
+              )}
+            />
+            <br />
+          </FormControl>
+          <FormControl>
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <InputField
+                  {...field}
                   label="Password"
                   type="password"
-                  error={touched.password && !!errors.password}
-                  helperText={touched.password && errors.password}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
                 />
-                <br/>
-              </FormControl>
-              <FormControl>
-                <ButtonComponent
-                  label="Login"
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                />
-                <br/>
-              </FormControl>
-              <FormControl>
-                <Link to={"/signup"}>
-                  <ButtonComponent
-                    variant="contained"
-                    label="Sign Up"
-                    type="button"
-                    color="primary"
-                  />
-                </Link>
-              </FormControl>
-            </FormGroup>
-          </Form>
-        )}
-      </Formik>
+              )}
+            />
+            <br />
+          </FormControl>
+          <FormControl>
+            <ButtonComponent
+              label="Login"
+              type="submit"
+              color="primary"
+              variant="contained"
+            />
+            <br />
+          </FormControl>
+          <FormControl>
+            <Link to={"/signup"}>
+              <ButtonComponent
+                variant="contained"
+                label="Sign Up"
+                type="button"
+                color="primary"
+              />
+            </Link>
+          </FormControl>
+        </FormGroup>
+      </form>
       <ToastContainer />
     </div>
   );
