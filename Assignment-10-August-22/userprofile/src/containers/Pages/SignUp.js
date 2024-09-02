@@ -24,7 +24,7 @@ const validationSchema = Yup.object({
   country: Yup.string().required("Country is required"),
 });
 
-function SignUp() {
+const SignUp =()=> {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userArray = useSelector((state) => state.userArray.value);
@@ -80,7 +80,6 @@ function SignUp() {
                     <InputField
                       {...field}
                       label="First Name"
-                      error={!!errors.firstName}
                       helperText={errors.firstName?.message}
                     />
                   )}
@@ -94,7 +93,6 @@ function SignUp() {
                     <InputField
                       {...field}
                       label="Last Name"
-                      error={!!errors.lastName}
                       helperText={errors.lastName?.message}
                     />
                   )}
@@ -109,7 +107,6 @@ function SignUp() {
                       {...field}
                       label="Email"
                       type="email"
-                      error={!!errors.email}
                       helperText={errors.email?.message}
                     />
                   )}
