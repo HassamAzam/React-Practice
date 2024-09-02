@@ -1,12 +1,8 @@
+import "./App.css";
+import TaskList from "./TaskList";
 
-import './App.css';
-import TaskList from './TaskList';
 function App() {
-  return (
-    <div>
-    <TaskList></TaskList>
-    </div>
-  );
+  return <TaskList />;
 }
 
 export default App;

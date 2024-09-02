@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+
 import { Button, TextField } from "@mui/material";
+
 export default function Task(props) {
   const [editFlag, setEditFlag] = useState(false);
   const [tempText, setTempText] = useState("");
@@ -13,8 +15,7 @@ export default function Task(props) {
     <>
       <div className="taskBox">
         <span>
-          {" "}
-          <h3 className="taskText">{task.text}</h3>
+          <h3 className="taskText">{` ${task.text}`}</h3>
         </span>
         <div className="buttons">
           <Button
