@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField } from "@mui/material";
-const InputField = ({ label, placeholder, type = "text", ...props }) => {
-  return (
+
+const InputField = ({ label, placeholder, type = "text", ...props }) => (
     <TextField
       label={label}
       placeholder={placeholder}
@@ -11,6 +11,6 @@ const InputField = ({ label, placeholder, type = "text", ...props }) => {
       {...props}
     />
   );
-};
+
 
 export default InputField;

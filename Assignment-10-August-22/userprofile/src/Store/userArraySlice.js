@@ -18,6 +18,8 @@ export const userArraySlice = createSlice({
     },
   },
 });
-
+export const findInArray = (state) => state.userArray.value
 export const { addInArray, updateInArray } = userArraySlice.actions;
+
+
 export default userArraySlice.reducer;

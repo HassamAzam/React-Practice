@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,8 @@ import * as Yup from "yup";
 import SelectCountry from "../../Components/SelectCountry";
 import InputField from "../../Components/InputField";
 import ButtonComponent from "../../Components/ButtonComponent";
-import { addInArray } from "../../Store/userArraySlice";
+import { addInArray } from "../../store/userArraySlice";
+import setDocumentTitle from "./Title";
 
 const validationSchema = Yup.object({
   firstName: Yup.string("Enter a string").required("First Name is required"),
@@ -24,7 +25,7 @@ const validationSchema = Yup.object({
   country: Yup.string().required("Country is required"),
 });
 
-const SignUp =()=> {
+const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userArray = useSelector((state) => state.userArray.value);
@@ -44,13 +45,16 @@ const SignUp =()=> {
     },
   });
 
+  useEffect(() => {
+    setDocumentTitle("SignUp");
+  }, []);
+
   const handleClose = () => {
     navigate("/login");
   };
 
-  const checkIfUserExists = (email) => {
-    return userArray.some((user) => user.email === email);
-  };
+  const checkIfUserExists = (email) =>
+    userArray.some((user) => user.email === email);
 
   const onSubmit = (values) => {
     if (checkIfUserExists(values.email)) {
@@ -64,7 +68,7 @@ const SignUp =()=> {
   return (
     <div>
       <Modal
-        open={true}
+        open
         onClose={handleClose}
         aria-labelledby="registration-form"
         aria-describedby="registration-form-description"
@@ -165,6 +169,6 @@ const SignUp =()=> {
       <ToastContainer />
     </div>
   );
-}
+};
 
 export default SignUp;

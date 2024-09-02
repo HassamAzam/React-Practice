@@ -1,6 +1,7 @@
 .App {
   text-align: center;
 }
+
 .formContainer {
   position: absolute;
   top: 50%;
@@ -10,7 +11,7 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  width: 300px; 
+  width: 300px;
 }
 
 .form h1 {
@@ -23,6 +24,7 @@
   flex-direction: column;
   gap: 15px;
 }
+
 .LoginFormContainer {
   position: absolute;
   top: 50%;
@@ -32,9 +34,11 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  width: 300px; 
+  width: 300px;
 }
-.red-toast-message{
+
+.red-toast-message {
   background-color: red;
   color: white;
 }
+

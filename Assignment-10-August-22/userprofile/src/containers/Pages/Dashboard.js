@@ -1,26 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { logout } from "../../Store/authSlice";
-import { updateInArray } from "../../Store/userArraySlice";
+import { logout } from "../../store/authSlice";
+import { updateInArray } from "../../store/userArraySlice";
 
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
+import setDocumentTitle from "./Title";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  //get the most recent userEmail state to check if the user is logged in and which user is logged in
   const userEmail = useSelector((state) => state.auth.userEmail);
   const userArray = useSelector((state) => state.userArray.value);
 
   const loggedInUser = userArray.find((user) => user.email === userEmail);
 
   const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    setDocumentTitle("Dashboard");
+  }, []);
 
   const initialValues = {
     firstName: loggedInUser?.firstName || "",
@@ -57,7 +63,6 @@ export default function Dashboard() {
 
   if (!userEmail) {
     navigate("/login");
-    return null;
   }
 
   return (

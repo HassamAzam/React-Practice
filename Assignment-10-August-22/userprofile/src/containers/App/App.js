@@ -1,19 +1,18 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import {Provider} from 'react-redux'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
 
-import './App.css';
-import Login from '../Pages/Login';
-import SignUp from '../Pages/SignUp';
-import { store } from '../../Store/store';
+import "./App.css";
+import Login from "../Pages/Login";
+import SignUp from "../Pages/SignUp";
+import { store } from "../../store/store";
 
-import Dashboard from '../Pages/Dashboard';
+import Dashboard from "../Pages/Dashboard";
 
 function App() {
   return (
-
     <div className="App">
-    <Provider store={store}>
+      <Provider store={store}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
@@ -21,7 +20,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Provider>
-
     </div>
   );
 }

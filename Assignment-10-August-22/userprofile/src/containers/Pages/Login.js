@@ -1,28 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
+import { useForm, Controller } from "react-hook-form";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from "react-router-dom";
 import { FormGroup, FormControl } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
-import { login } from "../../Store/authSlice";
+import { login } from "../../store/authSlice";
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
+import setDocumentTitle from "./Title";
+import { findInArray } from "../../store/userArraySlice";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email format").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
 });
 
 export default function Login() {
-  const userArray = useSelector((state) => state.userArray.value);
+  const userArray = useSelector(findInArray);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {handleSubmit,control,  formState: { errors }} = useForm({  
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
       email: "",
@@ -30,17 +41,19 @@ export default function Login() {
     },
   });
 
+  useEffect(() => {
+    setDocumentTitle("Login");
+  }, []);
+
   const handleLogin = (values) => {
     const user = userArray.find((user) => user.email === values.email);
 
     if (user) {
-      if (user.password === values.password) {
+      if (user?.password === values?.password) {
         dispatch(login(user.email));
         toast.success("Login Successful");
 
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
+        navigate("/dashboard");
       } else {
         toast.error("Incorrect Password");
       }
