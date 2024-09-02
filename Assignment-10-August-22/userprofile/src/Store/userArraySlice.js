@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createSelector } from 'reselect';
+import { selectUserEmail } from './authSlice';
 
 export const userArraySlice = createSlice({
   name: "userArray",
@@ -18,7 +20,14 @@ export const userArraySlice = createSlice({
     },
   },
 });
-export const findInArray = (state) => state.userArray.value
+
+export const selectUserArray = (state) => state.userArray.value;
+
+export const selectLoggedInUser = createSelector(
+  [selectUserArray, selectUserEmail],
+  (userArray, userEmail) => userArray.find(user => user.email === userEmail)
+);
+
 export const { addInArray, updateInArray } = userArraySlice.actions;
 
 

@@ -4,24 +4,26 @@ import { Card, CardContent, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 import { logout } from "../../store/authSlice";
-import { updateInArray } from "../../store/userArraySlice";
+import { updateInArray, selectLoggedInUser } from "../../store/userArraySlice";
+import { selectUserArray } from "../../store/userArraySlice";
 
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
 import setDocumentTitle from "./Title";
+import { ToastContainer } from "react-toastify";
+
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //get the most recent userEmail state to check if the user is logged in and which user is logged in
-  const userEmail = useSelector((state) => state.auth.userEmail);
-  const userArray = useSelector((state) => state.userArray.value);
+  const loggedInUser = useSelector(selectLoggedInUser);
+  const userArray = useSelector(selectUserArray);
 
-  const loggedInUser = userArray.find((user) => user.email === userEmail);
-
+  console.log("Logged user", loggedInUser);
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -32,12 +34,14 @@ export default function Dashboard() {
     firstName: loggedInUser?.firstName || "",
     lastName: loggedInUser?.lastName || "",
     country: loggedInUser?.country || "",
+    email: loggedInUser?.email || "",
   };
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
     country: Yup.string().required("Country is required"),
+    email: Yup.string().email("Please enter a valid email").required(),
   });
 
   const handleLogout = () => {
@@ -45,8 +49,19 @@ export default function Dashboard() {
     navigate("/login");
   };
 
+  const checkExistence = (userArray,email) =>
+     userArray.some((user) => user.email === email);
+
   const handleUpdate = (values) => {
+    console.log("inside  the update functions");
     if (loggedInUser) {
+
+      if (values.email!==loggedInUser.email  && checkExistence(userArray,values.email))
+      {
+        toast.error("Email already in use");
+        setEditing(false);
+        return;
+      }
       dispatch(
         updateInArray({
           email: loggedInUser.email,
@@ -54,6 +69,7 @@ export default function Dashboard() {
             firstName: values.firstName,
             lastName: values.lastName,
             country: values.country,
+            email: values.email,
           },
         })
       );
@@ -61,7 +77,7 @@ export default function Dashboard() {
     }
   };
 
-  if (!userEmail) {
+  if (!loggedInUser?.email) {
     navigate("/login");
   }
 
@@ -72,6 +88,7 @@ export default function Dashboard() {
       alignItems="center"
       minHeight="100vh"
     >
+      <ToastContainer/>
       <Card sx={{ maxWidth: 500, padding: 2 }}>
         <CardContent>
           <Typography variant="h5" component="div" gutterBottom>
@@ -111,6 +128,15 @@ export default function Dashboard() {
                     onChange={handleChange}
                   />
                   <InputField
+                    label=""
+                    name="email"
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    value={values.email}
+                    onChange={handleChange}
+                  />
+                  <InputField
                     label="Country"
                     name="country"
                     variant="outlined"
@@ -128,7 +154,7 @@ export default function Dashboard() {
                   />
                   <ButtonComponent
                     variant="outlined"
-                    onClick={() => setEditing(false)}
+                    onClick={()=>setEditing(false)}
                     fullWidth
                     label="Cancel"
                   />

@@ -13,7 +13,7 @@ import { login } from "../../store/authSlice";
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
 import setDocumentTitle from "./Title";
-import { findInArray } from "../../store/userArraySlice";
+import { selectUserArray } from "../../store/userArraySlice";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
 });
 
 export default function Login() {
-  const userArray = useSelector(findInArray);
+  const userArray = useSelector(selectUserArray);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
