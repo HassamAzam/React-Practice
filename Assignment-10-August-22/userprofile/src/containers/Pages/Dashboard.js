@@ -6,15 +6,14 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 
-import { logout } from "../../store/authSlice";
+import { logoutThunk } from "../../store/authSlice";
 import { updateInArray, selectLoggedInUser } from "../../store/userArraySlice";
 import { selectUserArray } from "../../store/userArraySlice";
 
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
-import setDocumentTitle from "./Title";
+import setDocumentTitle from "./util/titleSetter";
 import { ToastContainer } from "react-toastify";
-
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -23,7 +22,6 @@ export default function Dashboard() {
   const loggedInUser = useSelector(selectLoggedInUser);
   const userArray = useSelector(selectUserArray);
 
-  console.log("Logged user", loggedInUser);
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -44,20 +42,20 @@ export default function Dashboard() {
     email: Yup.string().email("Please enter a valid email").required(),
   });
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await dispatch(logoutThunk()).unwrap();
     navigate("/login");
   };
 
-  const checkExistence = (userArray,email) =>
-     userArray.some((user) => user.email === email);
+  const checkExistence = (userArray, email) =>
+    userArray.some((user) => user.email === email);
 
   const handleUpdate = (values) => {
-    console.log("inside  the update functions");
     if (loggedInUser) {
-
-      if (values.email!==loggedInUser.email  && checkExistence(userArray,values.email))
-      {
+      if (
+        values.email !== loggedInUser.email &&
+        checkExistence(userArray, values.email)
+      ) {
         toast.error("Email already in use");
         setEditing(false);
         return;
@@ -88,7 +86,7 @@ export default function Dashboard() {
       alignItems="center"
       minHeight="100vh"
     >
-      <ToastContainer/>
+      <ToastContainer />
       <Card sx={{ maxWidth: 500, padding: 2 }}>
         <CardContent>
           <Typography variant="h5" component="div" gutterBottom>
@@ -128,7 +126,7 @@ export default function Dashboard() {
                     onChange={handleChange}
                   />
                   <InputField
-                    label=""
+                    label="Email"
                     name="email"
                     variant="outlined"
                     margin="normal"
@@ -154,7 +152,7 @@ export default function Dashboard() {
                   />
                   <ButtonComponent
                     variant="outlined"
-                    onClick={()=>setEditing(false)}
+                    onClick={() => setEditing(false)}
                     fullWidth
                     label="Cancel"
                   />

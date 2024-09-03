@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 
 const ButtonComponent = ({
@@ -9,17 +9,23 @@ const ButtonComponent = ({
   variant = "contained",
   ...props
 }) => (
-  <Button onClick={onClick} color={color} variant={variant} {...props}>
+  <Button
+    sx={{ marginBottom: "16px" }}
+    onClick={onClick}
+    color={color}
+    variant={variant}
+    {...props}
+  >
     {label}
   </Button>
 );
 
-
 Button.propTypes = {
-  label: PropTypes.string.isRequired,  
-   
+  label: PropTypes.string.isRequired,
 };
+
 Button.defaultProps = {
-  label:"Button Name"                      
+  label: "Button Name",
 };
+
 export default ButtonComponent;

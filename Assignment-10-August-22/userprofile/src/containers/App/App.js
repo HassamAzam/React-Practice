@@ -1,24 +1,31 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import PrivateRoute from "../../Components/PrivateRoute";
+import Dashboard from "../Pages/Dashboard";
 
 import "./App.css";
-import Login from "../Pages/Login";
-import SignUp from "../Pages/SignUp";
 import { store } from "../../store/store";
 
-import Dashboard from "../Pages/Dashboard";
+const Login = React.lazy(() => import("../Pages/Login"));
+const SignUp = React.lazy(() => import("../Pages/SignUp"));
+const Welcome = React.lazy(() => import("../Pages/Welcome"));
 
 function App() {
   return (
     <div className="App">
       <Provider store={store}>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
+        <Suspense fallback={<h1>Loading...</h1>}>
+          <Routes>
+            <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/dashboard"
+              element={<PrivateRoute toBeAuthenticated={Dashboard} />}
+            />
+          </Routes>
+        </Suspense>
       </Provider>
     </div>
   );

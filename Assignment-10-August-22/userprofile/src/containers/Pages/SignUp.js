@@ -11,7 +11,7 @@ import SelectCountry from "../../Components/SelectCountry";
 import InputField from "../../Components/InputField";
 import ButtonComponent from "../../Components/ButtonComponent";
 import { addInArray } from "../../store/userArraySlice";
-import setDocumentTitle from "./Title";
+import setDocumentTitle from "./util/titleSetter";
 
 const validationSchema = Yup.object({
   firstName: Yup.string("Enter a string").required("First Name is required"),

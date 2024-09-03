@@ -12,7 +12,8 @@ import * as Yup from "yup";
 import { login } from "../../store/authSlice";
 import ButtonComponent from "../../Components/ButtonComponent";
 import InputField from "../../Components/InputField";
-import setDocumentTitle from "./Title";
+import setDocumentTitle from "./util/titleSetter";
+import getEmail from "./util/getEmail";
 import { selectUserArray } from "../../store/userArraySlice";
 
 const validationSchema = Yup.object({
@@ -46,17 +47,14 @@ export default function Login() {
   }, []);
 
   const handleLogin = (values) => {
-    const user = userArray.find((user) => user.email === values.email);
+    const user = getEmail(values.email, userArray);
 
-    if (user) {
-      if (user?.password === values?.password) {
-        dispatch(login(user.email));
-        toast.success("Login Successful");
-
-        navigate("/dashboard");
-      } else {
-        toast.error("Incorrect Password");
-      }
+    if (user?.password === values?.password) {
+      dispatch(login(user.email));
+      toast.success("Login Successful");
+      navigate("/dashboard");
+    } else if (user?.password !== values?.password) {
+      toast.error("Incorrect Password");
     } else {
       toast.error("User Not Found!");
     }
