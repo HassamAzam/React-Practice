@@ -1,0 +1,48 @@
+.App {
+  text-align: center;
+}
+
+.formContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  width: 300px;
+}
+
+.form h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.LoginFormContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  width: 300px;
+}
+
+.red-toast-message {
+  background-color: red;
+  color: white;
+}
+
+.ImageBox {
+  height: 40px;
+  width: 50px;
+}
