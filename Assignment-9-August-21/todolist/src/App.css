@@ -1,0 +1,23 @@
+.taskText {
+  margin: 20px;
+  border-color: purple;
+}
+.taskBox {
+  border: 2px solid;
+  border-color: rgb(16, 2, 25);
+  padding: 20px;
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.taskInput {
+  margin-top: 20px;
+  border-color: blueviolet;
+  display: flex;
+  font-weight: bold;
+  justify-content: space-evenly;
+}
+.buttons {
+  display: flex;
+  gap: 20px;
+}
