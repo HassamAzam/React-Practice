@@ -12,8 +12,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-import signUpUtility from "../Utilities/signupUtility";
-
+import signUpUtility from "./signupUtility";
 export type FormValues = {
   email: string;
   password: string;

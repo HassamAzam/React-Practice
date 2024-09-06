@@ -1,6 +1,6 @@
-import { BASE_URL } from "./getData";
-import { signupInterface } from "./interfaces";
-import checkifExists from "./checkIfExists";
+import { BASE_URL } from "../../Utilities/getData";
+import { signupInterface } from "../../Utilities/interfaces";
+import checkifExists from "../../Utilities/checkIfExists";
 import axios from "axios";
 const signUpUtility = async (user: signupInterface) => {
   const ifExist = await checkifExists(user.email);

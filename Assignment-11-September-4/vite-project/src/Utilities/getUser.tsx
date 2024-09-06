@@ -7,7 +7,8 @@ const loginThroughCode = async (email: string) => {
   );
   console.log("user got from APi", returnObject);
   if (returnObject.data.length) {
-        sessionStorage.setItem("userEmail",returnObject.data[0]);
+    sessionStorage.setItem("userEmail", JSON.stringify(returnObject.data[0]));
+    return returnObject.data[0];
   }
 };
 export default loginThroughCode;

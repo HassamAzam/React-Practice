@@ -11,7 +11,10 @@ import { ToastContainer, toast } from "react-toastify";
 import emailjs from "@emailjs/browser";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
-import loginThroughCode from "../Utilities/getUser";
+import loginThroughCode from "../../Utilities/getUser";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { sessionSetter } from "../../store/userSlice";
 
 type FormValues = {
   email: string;
@@ -19,17 +22,20 @@ type FormValues = {
 };
 
 const ForgetPassword: React.FC = () => {
+  const dispatch=useDispatch()
   const [showCodeBox, setCodeBox] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>();
   const [code, setCode] = useState(0);
   const [email,setEmail]=useState('')
   const [receivedCode, setReceivedCode] = useState<string>();
-  const codeVerifier = () => {
-    console.log(code);
-    console.log(receivedCode);
+  const navigate = useNavigate();
+  const codeVerifier = async () => {
     if (code.toString() == receivedCode) {
       toast.success("code Verified");
-      loginThroughCode(email)
+      const response=await loginThroughCode(email)
+      dispatch(sessionSetter(response))
+      navigate("/dashboard");
+
       
     } else {
       toast.error("Wrong Code");

@@ -1,15 +1,29 @@
+import { SportsTennis } from "@mui/icons-material";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const loadUserFromSessionStorage = () => {
+    try {
+      const serializedState = sessionStorage.getItem("userEmail");
+      return serializedState ? JSON.parse(serializedState) : null;
+    } catch (e) {
+      return null;
+    }
+  };
+const initialState = {
+    value:loadUserFromSessionStorage()
+}
 
-const userSlice = createSlice(
-{
-        name: "userSlice",
-        initialState,
-        reducers: {
-            sessionSetter: (state, action) => {
-            state = action.payload;
-            }
-        }
-    });
+const userSlice = createSlice({
+  name: "userSlice",
+  initialState,
+  reducers: {
+    sessionSetter: (state, action) => {
+          state.value = action.payload;
+      },
+      sessionRemover: (state)=>{
+          state.value = {};
+      }
+  },
+});
 export default userSlice.reducer;
+export const { sessionSetter,sessionRemover } = userSlice.actions;
