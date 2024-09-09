@@ -7,12 +7,13 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Typography
 } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-import signUpUtility from "./signupUtility";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../store/store";
+import { signUp } from "../../store/signUpSlice";
 export type FormValues = {
   email: string;
   password: string;
@@ -21,19 +22,32 @@ export type FormValues = {
   maritalStatus: string;
 };
 export default function SignUp() {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<FormValues>();
+  const dispatch = useAppDispatch();
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const signUpResponse=await signUpUtility(data)
-    if (signUpResponse)
-    {
-      toast.success("Signed Up!")
-    }
-    else {
-      toast.error("User with this email already exist !")
+    
+    const signUpResponse = await dispatch(signUp(data));
+    if (signUpResponse.type=='signUp/fullfilled') {
+      toast.success("Signed Up!");
+      navigate("/login");
+    } else {
+      toast.error("User with this email already exist !");
     }
   };
   return (
-    <Box>
+    <Box
+      sx={{
+        border: "1px solid black",
+        borderRadius: 2,
+        padding: 9,
+        backgroundColor: "white",
+      }}
+    >
+      <Typography variant="h6" sx={{ color: "black" }}>
+      Sign Up
+      </Typography>
+      <br/>
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <TextField
@@ -43,7 +57,7 @@ export default function SignUp() {
           />
         </FormControl>
         <br />
-        <br/>
+        <br />
         <FormControl>
           <TextField
             label="Last Name"
@@ -52,12 +66,12 @@ export default function SignUp() {
           />
         </FormControl>
         <br />
-        <br/>
+        <br />
         <FormControl>
           <TextField label="Email" type="email" {...register("email")} />
         </FormControl>
         <br />
-        <br/>
+        <br />
         <FormControl>
           <TextField
             label="Password"
@@ -66,25 +80,26 @@ export default function SignUp() {
           />
         </FormControl>
         <br />
-        <br/>
+        <br />
         <FormControl fullWidth>
-        <InputLabel id="marital-status-label">Marital Status</InputLabel>
-        <Select
-          labelId="marital-status-label"
-          label="Marital Status"
-          defaultValue="" // You can set a default value here
-          {...register("maritalStatus", { required: true })}
-        >
-          <MenuItem value="Married">Married</MenuItem>
-          <MenuItem value="Single">Single</MenuItem>
-          <MenuItem value="Engaged">Engaged</MenuItem>
-        </Select>
-      </FormControl>
-        <br/><br/>
-        <Button type="submit" variant="contained">SignUp</Button>
-        
+          <InputLabel id="marital-status-label">Marital Status</InputLabel>
+          <Select
+            labelId="marital-status-label"
+            label="Marital Status"
+            defaultValue="" // You can set a default value here
+            {...register("maritalStatus", { required: true })}
+          >
+            <MenuItem value="Married">Married</MenuItem>
+            <MenuItem value="Single">Single</MenuItem>
+            <MenuItem value="Engaged">Engaged</MenuItem>
+          </Select>
+        </FormControl>
+        <br />
+        <br />
+        <Button type="submit" variant="contained">
+          SignUp
+        </Button>
       </Box>
-      <ToastContainer />
     </Box>
   );
 }

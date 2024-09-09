@@ -1,4 +1,3 @@
-import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,29 +9,22 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import SurveyComponent from "./SurveyComponent";
-import logout from "../Login/Logout";
-import DetailsForm from "./DetailsForm";
-import { useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { sessionRemover } from "../../store/userSlice";
+import logout from "../Login/Logout";
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [selectedComponent, setSelectedComponent] =
-    React.useState<React.ReactNode>(<DetailsForm />);
 
-  const handleComponentChange = (component: React.ReactNode) => {
-    setSelectedComponent(component);
-  };
   const handleLogout = () => {
     logout();
-    dispatch(sessionRemover())
-    navigate('/login')
-  }
+    dispatch(sessionRemover());
+    navigate("/login");
+  };
 
   const drawer = (
     <div>
@@ -41,12 +33,12 @@ export default function Dashboard() {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleComponentChange(<DetailsForm />)}>
+          <ListItemButton component={Link} to="profile">
             <ListItemText primary="Profile" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleComponentChange(<SurveyComponent />)}>
+          <ListItemButton component={Link} to="questions">
             <ListItemText primary="Survey" />
           </ListItemButton>
         </ListItem>
@@ -66,10 +58,7 @@ export default function Dashboard() {
         }}
       >
         <Toolbar>
-          <Button
-            color="inherit"
-            onClick={() =>handleLogout() }
-          >
+          <Button color="inherit" onClick={handleLogout}>
             Logout
           </Button>
         </Toolbar>
@@ -89,7 +78,7 @@ export default function Dashboard() {
         sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)` }}
       >
         <Toolbar />
-        {selectedComponent}
+        <Outlet />
       </Box>
     </Box>
   );

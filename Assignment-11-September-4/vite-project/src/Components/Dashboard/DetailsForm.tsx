@@ -1,40 +1,47 @@
-import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Button, Box, Typography } from "@mui/material";
 import { signupInterface } from "../../Utilities/interfaces";
-import updateUtility from "./updateUtility";
-
-interface stateInterface {
-    user: {
-      value:signupInterface
-  };
-}
+import { updateUser } from "../../store/updateSlice";
+import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 export default function DetailsForm() {
-  const user = useSelector((state: stateInterface) => state.user.value);
-  console.log("user in details form is: ", user);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.value);
+
   const { handleSubmit, control } = useForm({
     defaultValues: user,
   });
-  const onSubmit = (data: signupInterface) => {
-      updateUtility(data);
+
+  const onSubmit = async (data: signupInterface) => {
+    await dispatch(updateUser(data));
+    toast.success("Data Update Successfully");
   };
-    if (!user)
-    {
-        return
-    }
+
+  if (!user) {
+    return null;
+  }
+
   return (
+    <>
+    <Typography variant="h6" sx={{ color: "black" }}>
+        Update Details
+          </Typography>
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
       sx={{
         display: "flex",
+        border: "1px solid black",
         flexDirection: "column",
         gap: 2,
-        maxWidth: 400,
-        margin: "auto",
+        width:200,
+        margin:'auto'
+       
       }}
     >
+      
+          <br/> <br/>
       <Controller
         name="firstName"
         control={control}
@@ -64,12 +71,15 @@ export default function DetailsForm() {
       <Controller
         name="email"
         control={control}
-        
         render={({ field }) => (
-            <TextField {...field} label="Email"
-        placeholder={user.email}
-
-                variant="outlined" fullWidth />
+          <TextField
+            {...field}
+            label="Email"
+            placeholder={user.email}
+            variant="outlined"
+            disabled
+            fullWidth
+          />
         )}
       />
       <Controller
@@ -103,5 +113,6 @@ export default function DetailsForm() {
         Submit
       </Button>
     </Box>
+    </>
   );
 }

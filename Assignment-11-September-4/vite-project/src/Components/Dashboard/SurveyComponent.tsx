@@ -54,18 +54,27 @@ export default function SurveyComponent() {
           <Box my={4}>{renderQuestion()}</Box>
           <Box mt={4}>
             {step > 0 && (
-              <Button variant="contained" color="primary" onClick={handleBack}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleBack}
+                sx={{ margin: 2 }}
+              >
                 Back
               </Button>
             )}
             {step < 2 ? (
-              <Button variant="contained" color="primary" onClick={handleNext}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleNext}
+              >
                 Next
               </Button>
             ) : (
               <Button
                 variant="contained"
-                color="primary"
+                color="success"
                 onClick={handleSubmit}
               >
                 Submit
