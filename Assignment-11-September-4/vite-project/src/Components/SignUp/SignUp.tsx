@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/store";
 import { signUp } from "../../store/signUpSlice";
+
 export type FormValues = {
   email: string;
   password: string;
@@ -21,20 +22,24 @@ export type FormValues = {
   lastName: string;
   maritalStatus: string;
 };
+
 export default function SignUp() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<FormValues>();
   const dispatch = useAppDispatch();
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    
     const signUpResponse = await dispatch(signUp(data));
-    if (signUpResponse.type=='signUp/fullfilled') {
+    console.log(signUpResponse)
+    if (signUpResponse.type=='user/signUp/fulfilled') {
       toast.success("Signed Up!");
       navigate("/login");
     } else {
-      toast.error("User with this email already exist !");
+     
+      toast.error("Something Went wrong");
     }
   };
+
   return (
     <Box
       sx={{
@@ -86,8 +91,8 @@ export default function SignUp() {
           <Select
             labelId="marital-status-label"
             label="Marital Status"
-            defaultValue="" // You can set a default value here
-            {...register("maritalStatus", { required: true })}
+            defaultValue=""
+            {...register("maritalStatus", { required: "Marital Status is required" })}
           >
             <MenuItem value="Married">Married</MenuItem>
             <MenuItem value="Single">Single</MenuItem>
@@ -97,7 +102,7 @@ export default function SignUp() {
         <br />
         <br />
         <Button type="submit" variant="contained">
-          SignUp
+          Sign Up
         </Button>
       </Box>
     </Box>

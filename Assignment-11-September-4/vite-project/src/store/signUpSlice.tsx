@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../Utilities/baseURL";
 import { signupInterface } from "../Utilities/interfaces";
+
 interface SignUpState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
@@ -11,25 +12,32 @@ const initialState: SignUpState = {
   status: "idle",
   error: null,
 };
-
 export const signUp = createAsyncThunk(
-  "signUp",
+  "user/signUp",
   async (user: signupInterface, thunkAPI) => {
     try {
-      const returnObject = await axios.get(
-        `${BASE_URL}/users?email=${user.email}`
-      );
-      if (returnObject.data.length) {
+      const response = await axios.get(`${BASE_URL}/users?email=${user.email}`);
+      if (response.data.length > 0) {
         return thunkAPI.rejectWithValue("User already exists");
       }
 
-      await axios.post(`${BASE_URL}/users`, user);
       return true;
+
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 404) {  // user with the given wasn't found so we can add this email
+          await axios.post(`${BASE_URL}/users`, user);
+          return true;
+        } else {
+          return thunkAPI.rejectWithValue("An error occurred during sign-up");
+        }
+      }
+
       return thunkAPI.rejectWithValue("An error occurred during sign-up");
     }
   }
 );
+
 
 const signUpSlice = createSlice({
   name: "signUpSlice",
