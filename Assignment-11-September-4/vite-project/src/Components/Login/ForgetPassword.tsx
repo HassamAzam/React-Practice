@@ -1,92 +1,64 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormControl, Button, Box, TextField, Input, InputLabel, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch} from "../../store/store"; 
-import { sessionSetter } from "../../store/userSlice";
+import "react-toastify/dist/ReactToastify.css";
+
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { sendVerificationEmail } from "../../store/loginThroughCodeSlice";
+
+import { FormControl, Button, Box, TextField, Typography } from "@mui/material";
 
 type FormValues = {
   email: string;
-  message: string;
 };
 
 const ForgetPassword: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
-  const [showCodeBox, setCodeBox] = useState(false);
-  const [code, setCode] = useState(0); 
-  const [email, setEmail] = useState("");
-  const [receivedCode, setReceivedCode] = useState<string>("");
-  
   const { register, handleSubmit } = useForm<FormValues>();
+  const { status } = useAppSelector((state) => state.code);
 
   useEffect(() => {
-    setCode(Math.floor(1000 + Math.random() * 9000)); 
-  }, []);
-
-  const codeVerifier = () => {
-    if (code.toString() === receivedCode) {
-      toast.success("Code Verified");
-      dispatch(sessionSetter({ email }));
-      navigate("/dashboard");
-    } else {
-      toast.error("Wrong Code");
+    if (status === "success") {
+      toast.success("Details have been sent to your email");
+      navigate("/login");
+    } else if (status === "failed") {
+      toast.error("Failed to send details to your email");
     }
-  };
+  }, [status, navigate]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setEmail(data.email);
-    
-    const response = await dispatch(sendVerificationEmail({ email: data.email, code }));
-    
-    if (response.type === "auth/sendVerificationEmail/fulfilled") {
-      toast.success("Verification code sent");
-      setCodeBox(true); 
-    } else {
-      toast.error("Failed to send verification code");
-    }
+    await dispatch(sendVerificationEmail(data.email));
   };
 
   return (
     <>
-    <Typography variant="h6"  sx={{ color: 'black' }}>
-      Forget Password
-    </Typography>
-    <Box
-  sx={{
-    border: '1px solid black', 
-    borderRadius: 2,            
-    padding: 9,   
-    backgroundColor: 'white'             
-  }}>
-      {!showCodeBox && (
+      <Typography variant="h6" sx={{ color: "black" }}>
+        Forget Password
+      </Typography>
+      <Box
+        sx={{
+          border: "1px solid black",
+          borderRadius: 2,
+          padding: 9,
+          backgroundColor: "white",
+        }}
+      >
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-          <FormControl>
-            <TextField label="Email" {...register("email")} type="email" />
+          <FormControl fullWidth margin="normal">
+            <TextField
+              label="Email"
+              {...register("email")}
+              type="email"
+              required
+            />
           </FormControl>
-          <br/>
-          <br/>
-          <Button type="submit" variant="contained">
-            Send Code
+          <Button type="submit" variant="contained" color="primary">
+            Send Details
           </Button>
         </Box>
-      )}
-      {showCodeBox && (
-        <Box>
-          <InputLabel>Enter Code here</InputLabel>
-          <Input
-            onChange={(e) => {
-              setReceivedCode(e.target.value);
-            }}
-          />
-          <Button onClick={codeVerifier}>Verify Code</Button>
-        </Box>
-      )}
-    </Box>
+      </Box>
     </>
   );
 };

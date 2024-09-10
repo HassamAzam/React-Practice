@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import emailjs from "@emailjs/browser";
+
 import axios from "axios";
 import { BASE_URL } from "../Utilities/baseURL";
 import { AxiosResponse } from "axios";
 
-const checkUserExists = async (email: string): Promise<boolean> => {
+const checkUserExists = async (email: string): Promise<any> => {
   try {
     const response: AxiosResponse = await axios.get(
       `${BASE_URL}/users?email=${email}`
     );
-
-    return response.data.exists;
+    return response.data[0] || null;
   } catch (error) {
     throw new Error("Failed to check user existence");
   }
@@ -18,21 +18,18 @@ const checkUserExists = async (email: string): Promise<boolean> => {
 
 export const sendVerificationEmail = createAsyncThunk(
   "auth/sendVerificationEmail",
-  async (
-    { email, code }: { email: string; code: number },
-    { rejectWithValue }
-  ) => {
+  async (email: string, { rejectWithValue }) => {
     try {
-      const userExists = await checkUserExists(email);
+      const user = await checkUserExists(email);
 
-      if (!userExists) {
+      if (!user) {
         return rejectWithValue("User does not exist");
       }
 
       const emailParams = {
         to_name: email,
         from_name: "SurveyCopsTeam",
-        message: `Your verification code is: ${code}`,
+        message: `Your user details: ${JSON.stringify(user)}`,
       };
 
       await emailjs.send(
@@ -51,7 +48,7 @@ export const sendVerificationEmail = createAsyncThunk(
   }
 );
 
-const authSlice = createSlice({
+const codeSlice = createSlice({
   name: "auth",
   initialState: {
     status: "idle",
@@ -71,4 +68,4 @@ const authSlice = createSlice({
   },
 });
 
-export default authSlice.reducer;
+export default codeSlice.reducer;

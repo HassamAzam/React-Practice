@@ -1,3 +1,8 @@
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { sessionRemover } from "../../store/userSlice";
+import { useAppDispatch } from "../../store/store";
+import { logout } from "../../store/authSlice";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,19 +14,15 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { sessionRemover } from "../../store/userSlice";
-import logout from "../Login/Logout";
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
     dispatch(sessionRemover());
     navigate("/login");
   };

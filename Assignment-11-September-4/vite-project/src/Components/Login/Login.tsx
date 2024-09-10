@@ -1,12 +1,15 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { sessionSetter } from "../../store/userSlice";
-import { FormControl, Button, Box, TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch } from "../../store/store";
+
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { FormControl, Button, Box, TextField } from "@mui/material";
+
 import { authenticateUser } from "../../store/authSlice";
 import { Typography } from "@mui/material";
+import { sessionSetter } from "../../store/userSlice";
 
 type FormValues = {
   email: string;
@@ -16,16 +19,20 @@ type FormValues = {
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { status, user } = useAppSelector((state) => state.auth);
   const { register, handleSubmit } = useForm<FormValues>();
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const response = await dispatch(authenticateUser(data));
-    if (response.type == "auth/fulfilled") {
+  useEffect(() => {
+    if (status === "succeeded") {
       toast.success("Logged In");
-      dispatch(sessionSetter(response.payload));
+      dispatch(sessionSetter(user));
       navigate("/dashboard");
-    } else {
+    } else if (status === "failed") {
       toast.error("Email or Password is wrong");
     }
+  }, [status, user]);
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    await dispatch(authenticateUser(data));
   };
   const handleForgetPasswordClick = () => {
     navigate("/forgetPassword");
@@ -41,9 +48,9 @@ export default function Login() {
       }}
     >
       <Typography variant="h6" sx={{ color: "black" }}>
-      Login
+        Login
       </Typography>
-      <br/>
+      <br />
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <TextField label="Email" {...register("email")} type="email" />

@@ -1,9 +1,10 @@
 import "./App.css";
 import { Provider } from "react-redux";
+import { Routes, Route } from "react-router-dom";
+
 import store from "../../store/store";
 import Dashboard from "../Dashboard/Dashboard";
 import SignUp from "../SignUp/SignUp";
-import { Routes, Route } from "react-router-dom";
 import Login from "../Login/Login";
 import ForgetPassword from "../Login/ForgetPassword";
 import DetailsForm from "../Dashboard/DetailsForm";

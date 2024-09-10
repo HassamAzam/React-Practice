@@ -1,4 +1,9 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
 import {
   FormControl,
   Button,
@@ -7,36 +12,37 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Typography
+  Typography,
 } from "@mui/material";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/store";
-import { signUp } from "../../store/signUpSlice";
-
-export type FormValues = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  maritalStatus: string;
-};
+import { signUp, resetState } from "../../store/signUpSlice";
+import { useAppSelector } from "../../store/store";
+import { signupInterface } from "../../Utilities/interfaces";
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm<signupInterface>();
   const dispatch = useAppDispatch();
+  const { status } = useAppSelector((state) => state.signUp);
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const signUpResponse = await dispatch(signUp(data));
-    console.log(signUpResponse)
-    if (signUpResponse.type=='user/signUp/fulfilled') {
+  useEffect(() => {
+    if (status === "succeeded") {
       toast.success("Signed Up!");
       navigate("/login");
-    } else {
-     
-      toast.error("Something Went wrong");
+    } else if (status === "failed") {
+      toast.error("Something went wrong");
+    }
+
+    return () => {
+      dispatch(resetState());
+    };
+  }, [status]);
+
+  const onSubmit: SubmitHandler<signupInterface> = async (data) => {
+    try {
+      await dispatch(signUp(data)).unwrap(); // Unwrap to handle potential errors
+    } catch (error) {
+      console.error("Error during sign-up:", error);
     }
   };
 
@@ -50,9 +56,9 @@ export default function SignUp() {
       }}
     >
       <Typography variant="h6" sx={{ color: "black" }}>
-      Sign Up
+        Sign Up
       </Typography>
-      <br/>
+      <br />
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <TextField
@@ -92,7 +98,9 @@ export default function SignUp() {
             labelId="marital-status-label"
             label="Marital Status"
             defaultValue=""
-            {...register("maritalStatus", { required: "Marital Status is required" })}
+            {...register("maritalStatus", {
+              required: "Marital Status is required",
+            })}
           >
             <MenuItem value="Married">Married</MenuItem>
             <MenuItem value="Single">Single</MenuItem>

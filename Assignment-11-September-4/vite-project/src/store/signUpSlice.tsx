@@ -22,10 +22,10 @@ export const signUp = createAsyncThunk(
       }
 
       return true;
-
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 404) {  // user with the given wasn't found so we can add this email
+        if (error.response.status === 404) {
+          // user with the given wasn't found so we can add this email
           await axios.post(`${BASE_URL}/users`, user);
           return true;
         } else {
@@ -38,11 +38,14 @@ export const signUp = createAsyncThunk(
   }
 );
 
-
 const signUpSlice = createSlice({
   name: "signUpSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    resetState: (state) => {
+      (state.status = "idle"), (state.error = null);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signUp.pending, (state) => {
@@ -59,5 +62,5 @@ const signUpSlice = createSlice({
       });
   },
 });
-
+export const { resetState } = signUpSlice.actions;
 export default signUpSlice.reducer;
