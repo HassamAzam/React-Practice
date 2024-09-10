@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
 import { loginInterface } from "../Utilities/interfaces";
 import { BASE_URL } from "../Utilities/baseURL";
 

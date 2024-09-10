@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { useSelector, useDispatch } from "react-redux";
-import { combineReducers } from "@reduxjs/toolkit";
-
 import userSlice from "./userSlice";
 import signUpSlice from "./signUpSlice";
 import updateSlice from "./updateSlice";
-import authSlice from "./authSlice";
 import codeSlice from "./loginThroughCodeSlice";
-
+import authSlice from "./authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { combineReducers } from "@reduxjs/toolkit";
 const combineReducer = combineReducers({
   user: userSlice,
   signUp: signUpSlice,

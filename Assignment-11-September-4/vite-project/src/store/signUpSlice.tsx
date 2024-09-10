@@ -18,16 +18,14 @@ export const signUp = createAsyncThunk(
     try {
       const response = await axios.get(`${BASE_URL}/users?email=${user.email}`);
       if (response.data.length > 0) {
-        return thunkAPI.rejectWithValue("User already exists");
       }
 
       return true;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === 404) {
-          // user with the given wasn't found so we can add this email
           await axios.post(`${BASE_URL}/users`, user);
-          return true;
+          return thunkAPI.fulfillWithValue("Success");
         } else {
           return thunkAPI.rejectWithValue("An error occurred during sign-up");
         }

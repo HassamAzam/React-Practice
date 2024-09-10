@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { LinearProgress, Button } from "@mui/material";
-
 export default function ProgressBar() {
   const [progress, setProgress] = useState(0);
   const handleClick = () => {

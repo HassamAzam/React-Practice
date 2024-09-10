@@ -1,16 +1,14 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import { sessionSetter } from "../../store/userSlice";
+import { FormControl, Button, Box, TextField } from "@mui/material";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
-
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { FormControl, Button, Box, TextField } from "@mui/material";
-
-import { authenticateUser } from "../../store/authSlice";
 import { Typography } from "@mui/material";
-import { sessionSetter } from "../../store/userSlice";
-
+import { useEffect } from "react";
+import { loginRequest } from "../../sagaStore/sagas/authSagaSlice";
+import { authenticateUser } from "../../store/authSlice";
 type FormValues = {
   email: string;
   password: string;
@@ -32,7 +30,11 @@ export default function Login() {
   }, [status, user]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    await dispatch(authenticateUser(data));
+    if (import.meta.env.VITE_MIDDLEWARE == "thunk") {
+      dispatch(authenticateUser(data));
+    } else {
+      dispatch(loginRequest(data));
+    }
   };
   const handleForgetPasswordClick = () => {
     navigate("/forgetPassword");

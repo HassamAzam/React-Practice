@@ -1,7 +1,4 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -14,9 +11,12 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch } from "../../store/store";
 import { signUp, resetState } from "../../store/signUpSlice";
 import { useAppSelector } from "../../store/store";
+import { useEffect } from "react";
 import { signupInterface } from "../../Utilities/interfaces";
 
 export default function SignUp() {
@@ -40,10 +40,8 @@ export default function SignUp() {
 
   const onSubmit: SubmitHandler<signupInterface> = async (data) => {
     try {
-      await dispatch(signUp(data)).unwrap(); // Unwrap to handle potential errors
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-    }
+      await dispatch(signUp(data)).unwrap();
+    } catch (error) {}
   };
 
   return (

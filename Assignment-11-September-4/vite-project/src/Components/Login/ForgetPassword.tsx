@@ -1,13 +1,12 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useEffect } from "react";
+import { FormControl, Button, Box, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { sendVerificationEmail } from "../../store/loginThroughCodeSlice";
-
-import { FormControl, Button, Box, TextField, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { sendVerificationEmailRequest } from "../../sagaStore/sagas/codeSagaSlice";
 
 type FormValues = {
   email: string;
@@ -26,10 +25,14 @@ const ForgetPassword: React.FC = () => {
     } else if (status === "failed") {
       toast.error("Failed to send details to your email");
     }
-  }, [status, navigate]);
+  }, [status]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    await dispatch(sendVerificationEmail(data.email));
+    if (import.meta.env.VITE_MIDDLEWARE === "thunk") {
+      dispatch(sendVerificationEmail(data.email));
+    } else {
+      dispatch(sendVerificationEmailRequest({ email: data.email }));
+    }
   };
 
   return (
