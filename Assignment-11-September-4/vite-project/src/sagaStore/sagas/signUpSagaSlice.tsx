@@ -26,7 +26,7 @@ const signUpSagaSlice = createSlice({
       state.status = "failed";
       state.error = action.payload.message;
     },
-    signUpRequest: (state) => {
+    signUpRequest: (state,_) => {
       state.status = "loading";
     },
   },

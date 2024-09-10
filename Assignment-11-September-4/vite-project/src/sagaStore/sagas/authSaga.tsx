@@ -26,5 +26,5 @@ function* loginSaga(action: { type: string; payload: loginInterface }) {
 }
 
 export default function* watchLoginSaga() {
-  yield takeLatest(loginRequest.type, loginSaga);
+  yield takeLatest(loginRequest.type, loginSaga);//listening to login Request
 }

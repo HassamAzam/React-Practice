@@ -5,5 +5,5 @@ import watchSignUpSaga from "./signUpSaga";
 import  watchSendVerificationEmail  from "./codeSaga";
 
 export function* rootSaga() {
-    yield all([watchLoginSaga(),watchSignUpSaga(),watchSendVerificationEmail()]);
+    yield all([watchLoginSaga(),watchSignUpSaga(),watchSendVerificationEmail()]);//listners combined to send to store
 }

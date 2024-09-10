@@ -18,6 +18,7 @@ import { signUp, resetState } from "../../store/signUpSlice";
 import { useAppSelector } from "../../store/store";
 import { useEffect } from "react";
 import { signupInterface } from "../../Utilities/interfaces";
+import { signUpRequest } from "../../sagaStore/sagas/signUpSagaSlice";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -39,10 +40,16 @@ export default function SignUp() {
   }, [status]);
 
   const onSubmit: SubmitHandler<signupInterface> = async (data) => {
-    try {
-      await dispatch(signUp(data)).unwrap();
-    } catch (error) {}
-  };
+    
+      if (import.meta.env.VITE_MIDDLEWARE == "thunk") {
+
+        await dispatch(signUp(data)).unwrap();
+      }
+      else {
+        dispatch(signUpRequest(data))
+      }
+      
+    } 
 
   return (
     <Box
