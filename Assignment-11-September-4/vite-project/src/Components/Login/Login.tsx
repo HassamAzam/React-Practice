@@ -12,6 +12,7 @@ import middleware from "src/settings";
 import { sessionSetter } from "src/store/userSlice";
 import setDocumentTitle from "src/Utilities/title";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import Status from "src/Utilities/Enums";
 
 type FormValues = {
   email: string;
@@ -24,11 +25,11 @@ const Login = () => {
   const { status, user } = useAppSelector((state) => state.auth);
   const { register, handleSubmit } = useForm<FormValues>();
   useEffect(() => {
-    if (status === "succeeded") {
+    if (status === Status.Success) {
       toast.success("Logged In");
       dispatch(sessionSetter(user));
       navigate("/dashboard");
-    } else if (status === "failed") {
+    } else if (status === Status.Failed) {
       toast.error("Email or Password is wrong");
     }
   }, [status, user]);

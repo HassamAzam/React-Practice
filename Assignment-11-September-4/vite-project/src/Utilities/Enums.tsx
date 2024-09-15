@@ -1,8 +1,9 @@
-enum Status{
-    Success='succeeded',
-    Failed='failed',
-    Loading="loading",
-    Idle="idle"
+enum Status {
+  Success = "succeeded",
+  Failed = "failed",
+  Loading = "loading",
+  Idle = "idle",
+  NotFound=404
 }
 
-export default Status
+export default Status;

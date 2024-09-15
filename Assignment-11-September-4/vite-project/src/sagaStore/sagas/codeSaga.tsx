@@ -1,7 +1,7 @@
 import emailjs from "@emailjs/browser";
 import axios, { AxiosResponse } from "axios";
 
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 
 import { BASE_URL, serviceID, templateID, emailToken } from "src/settings";
 import {
@@ -28,7 +28,11 @@ const sendEmail = async (email: string, user: any): Promise<void> => {
     message: `Your user details: ${JSON.stringify(user)}`,
   };
 
-  await emailjs.send(serviceID, templateID, emailParams, emailToken);
+  try {
+    await emailjs.send(serviceID, templateID, emailParams, emailToken);
+  } catch (error) {
+    console.error(error)
+  }
 };
 
 function* sendVerificationEmailSaga(action: {
@@ -37,10 +41,12 @@ function* sendVerificationEmailSaga(action: {
 }): Generator<any, void, any> {
   try {
     const user: any = yield call(checkUserExists, action.payload);
+
     if (!user) {
       yield put(sendVerificationEmailFailure("User does not exist"));
       return;
     }
+
     yield call(sendEmail, action.payload, user);
     yield put(sendVerificationEmailSuccess());
   } catch (error: any) {
@@ -52,8 +58,5 @@ function* sendVerificationEmailSaga(action: {
   }
 }
 export default function* watchSendVerificationEmail() {
-  yield takeLatest(
-    sendVerificationEmailRequest.type,
-    sendVerificationEmailSaga
-  );
+  yield takeEvery(sendVerificationEmailRequest.type, sendVerificationEmailSaga);
 }

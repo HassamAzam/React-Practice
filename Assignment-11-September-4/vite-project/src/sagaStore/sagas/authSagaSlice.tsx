@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Status from "src//Utilities/Enums";
+import { LoginInterface } from "src/Utilities/interfaces";
 interface AuthState {
-  user: any | null;
+  user: LoginInterface |null;
   status: Status;
   error: string | null;
 }

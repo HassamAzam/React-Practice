@@ -12,12 +12,12 @@ const authenticate = async (
   return await axios.get(`${BASE_URL}/users?email=${credentials.email}`);
 };
 
-function* loginSaga(action: { type: string; payload: LoginInterface }) {
+function* loginSaga({ payload }: { type: string; payload: LoginInterface }) {
   try {
-    const response: AxiosResponse = yield call(authenticate, action.payload);
+    const response: AxiosResponse = yield call(authenticate, payload);
     const user = response.data[0];
 
-    if (user.password === action.payload.password) {
+    if (user.password === payload.password) {
       yield put(loginSuccess(user));
     } else {
       yield put(loginFailure());

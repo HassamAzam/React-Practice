@@ -12,10 +12,10 @@ import store from "src/store/store";
 const Dashboard = lazy(() => import("src/Components/Dashboard/Dashboard"));
 const DetailsForm = lazy(() => import("src/Components/Dashboard/DetailsForm"));
 const SurveyComponent = lazy(
-  () => import("src/Components/Dashboard/SurveyComponent")
+  () => import("src/Components/Dashboard/SurveyComponent"),
 );
 const ForgetPassword = lazy(
-  () => import("src/Components/Login/ForgetPassword")
+  () => import("src/Components/Login/ForgetPassword"),
 );
 const Login = lazy(() => import("src/Components/Login/Login"));
 const PrivateComponent = lazy(() => import("src/Components/PrivateComponent"));

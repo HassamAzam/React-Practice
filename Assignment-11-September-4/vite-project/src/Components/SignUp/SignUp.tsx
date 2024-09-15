@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 import middleware from "src/settings";
 import setDocumentTitle from "src/Utilities/title";
+import Status from "src/Utilities/Enums";
 import { SignUpInterface } from "src/Utilities/interfaces";
 import { resetState, signUp } from "src/store/signUpSlice";
 import { useAppDispatch, useAppSelector } from "src/store/store";
@@ -32,10 +33,10 @@ const SignUp = () => {
   const genderOptions = ["Male", "Female", "Other"];
 
   useEffect(() => {
-    if (status === "succeeded") {
+    if (status === Status.Success) {
       toast.success("Signed Up!");
       navigate("/login");
-    } else if (status === "failed") {
+    } else if (status === Status.Failed) {
       toast.error("Something went wrong");
     }
 

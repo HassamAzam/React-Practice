@@ -5,7 +5,7 @@ import { SignUpInterface } from "src/Utilities/interfaces";
 import { signUpFailure, signUpRequest, signUpSuccess } from "./signUpSagaSlice";
 
 const checkIfExist = async (
-  user: SignUpInterface
+  user: SignUpInterface,
 ): Promise<AxiosResponse | null> => {
   try {
     return await axios.get(`${BASE_URL}/users?email=${user.email}`);
@@ -28,7 +28,7 @@ function* signUpSaga(action: { type: string; payload: SignUpInterface }) {
   try {
     const response: AxiosResponse | null = yield call(
       checkIfExist,
-      action.payload
+      action.payload,
     );
 
     if (response && response.data.length > 0) {
@@ -36,7 +36,7 @@ function* signUpSaga(action: { type: string; payload: SignUpInterface }) {
     } else {
       const signUpResponse: AxiosResponse | null = yield call(
         signUp,
-        action.payload
+        action.payload,
       );
       if (signUpResponse && signUpResponse.data) {
         yield put(signUpSuccess());

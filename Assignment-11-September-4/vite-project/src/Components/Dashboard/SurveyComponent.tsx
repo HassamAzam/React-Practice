@@ -21,7 +21,7 @@ const SurveyComponent = () => {
     handleNext();
   };
 
-  const renderQuestion = () => {
+  const renderQuestionComponent = () => {
     switch (currenQuestionIndex) {
       case 0:
         return (
@@ -45,7 +45,7 @@ const SurveyComponent = () => {
           />
         );
       default:
-        return <></>;
+        return null;
     }
   };
 
@@ -57,7 +57,7 @@ const SurveyComponent = () => {
             variant="determinate"
             value={(currenQuestionIndex / 3) * 100}
           />
-          <Box my={4}>{renderQuestion()}</Box>
+          <Box my={4}>{renderQuestionComponent()}</Box>
           <Box mt={4}>
             {currenQuestionIndex > 0 && (
               <Button
@@ -101,4 +101,5 @@ const SurveyComponent = () => {
     </Box>
   );
 };
+
 export default SurveyComponent;

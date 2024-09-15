@@ -7,13 +7,13 @@ import {
   Checkbox,
 } from "@mui/material";
 
-const Question2=({
+const Question2 = ({
   answers,
   setAnswers,
 }: {
   answers: string[];
   setAnswers: (value: string[]) => void;
-})=> {
+}) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     const newAnswers = checked
@@ -72,6 +72,6 @@ const Question2=({
       </FormControl>
     </>
   );
-}
+};
 
-export default Question2
+export default Question2;

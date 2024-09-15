@@ -21,9 +21,8 @@ export const authenticateUser = createAsyncThunk(
   "auth",
   async (credentials: LoginInterface, thunkAPI) => {
     try {
-      
       const response = await axios.get(
-        `${BASE_URL}/users?email=${credentials.email}`
+        `${BASE_URL}/users?email=${credentials.email}`,
       );
       if (response.data.length) {
         if (response.data[0].password === credentials.password) {
@@ -35,7 +34,7 @@ export const authenticateUser = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue("An error occurred");
     }
-  }
+  },
 );
 
 const authSlice = createSlice({

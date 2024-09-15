@@ -9,7 +9,7 @@ import Status from "src/Utilities/Enums";
 const checkUserExists = async (email: string): Promise<any> => {
   try {
     const response: AxiosResponse = await axios.get(
-      `${BASE_URL}/users?email=${email}`
+      `${BASE_URL}/users?email=${email}`,
     );
     return response.data[0] || null;
   } catch (error) {
@@ -33,20 +33,15 @@ export const sendVerificationEmail = createAsyncThunk(
         message: `Your user details: ${JSON.stringify(user)}`,
       };
 
-      await emailjs.send(
-        serviceID,
-        templateID,
-        emailParams,
-        emailToken
-      );
+      await emailjs.send(serviceID, templateID, emailParams, emailToken);
 
       return { message: "Verification email sent successfully" };
     } catch (error: any) {
       return rejectWithValue(
-        error.message || "Failed to send verification email"
+        error.message || "Failed to send verification email",
       );
     }
-  }
+  },
 );
 
 const codeSlice = createSlice({

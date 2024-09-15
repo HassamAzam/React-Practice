@@ -1,9 +1,8 @@
 import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import middleware from "src/settings";
@@ -20,17 +19,22 @@ type FormValues = {
 const ForgetPassword = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [requestSendFlag, setRequestSendFlag] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>();
   const { status } = useAppSelector((state) => state.code);
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (status === Status.Success) {
       toast.success("Details have been sent to your email");
+      setRequestSendFlag(true);
       navigate("/login");
-    } else if (status === "failed") {
+    } else if (status === Status.Failed) {
       toast.error("Failed to send details to your email");
     }
   }, [status]);
+
   useEffect(() => {
     setDocumentTitle("Forget Password");
   }, []);
@@ -40,6 +44,11 @@ const ForgetPassword = () => {
       dispatch(sendVerificationEmail(data.email));
     } else {
       dispatch(sendVerificationEmailRequest({ email: data.email }));
+    }
+    // Disable the button and hide it after one click
+    if (buttonRef.current) {
+      buttonRef.current.disabled = true;
+      setRequestSendFlag(true);
     }
   };
 
@@ -65,9 +74,16 @@ const ForgetPassword = () => {
               required
             />
           </FormControl>
-          <Button type="submit" variant="contained" color="primary">
-            Send Details
-          </Button>
+          {!requestSendFlag && (
+            <Button
+              ref={buttonRef}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Send Details
+            </Button>
+          )}
         </Box>
       </Box>
     </>

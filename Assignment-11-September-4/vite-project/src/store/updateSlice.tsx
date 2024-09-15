@@ -20,7 +20,7 @@ export const updateUser = createAsyncThunk(
   async (user: SignUpInterface, thunkAPI) => {
     try {
       const fetchResponse = await axios.get(
-        `${BASE_URL}/users?email=${user.email}`
+        `${BASE_URL}/users?email=${user.email}`,
       );
       if (!fetchResponse.data.length) {
         return thunkAPI.rejectWithValue("User does not exist");
@@ -31,7 +31,7 @@ export const updateUser = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue("An error occurred during update");
     }
-  }
+  },
 );
 
 const updateSlice = createSlice({

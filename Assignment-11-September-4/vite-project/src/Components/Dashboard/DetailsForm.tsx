@@ -29,7 +29,7 @@ const DetailsForm = () => {
     { name: "email", label: "Email", disabled: true },
     { name: "password", label: "Password", type: "password" },
     { name: "maritalStatus", label: "Marital Status" },
-    { name: "gender" , label: "Gender"}
+    { name: "gender", label: "Gender" },
   ];
 
   return (

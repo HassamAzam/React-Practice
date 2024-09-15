@@ -17,13 +17,13 @@ const codeSagaSlice = createSlice({
   reducers: {
     sendVerificationEmailRequest: (
       state,
-      _: PayloadAction<{ email: string }>
+      _: PayloadAction<{ email: string }>,
     ) => {
       state.status = Status.Loading;
       state.error = null;
     },
     sendVerificationEmailSuccess: (state) => {
-      state.status = Status.Loading;
+      state.status = Status.Success;
       state.error = null;
     },
     sendVerificationEmailFailure: (state, action: PayloadAction<string>) => {

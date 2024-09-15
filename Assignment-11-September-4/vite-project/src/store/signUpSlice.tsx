@@ -24,7 +24,7 @@ export const signUp = createAsyncThunk(
       return true;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 404) {
+        if (error.response.status === Status.NotFound) {
           await axios.post(`${BASE_URL}/users`, user);
           return thunkAPI.fulfillWithValue("Success");
         } else {
@@ -34,7 +34,7 @@ export const signUp = createAsyncThunk(
 
       return thunkAPI.rejectWithValue("An error occurred during sign-up");
     }
-  }
+  },
 );
 
 const signUpSlice = createSlice({
