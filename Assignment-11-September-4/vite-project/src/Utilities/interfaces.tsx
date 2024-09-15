@@ -1,12 +1,13 @@
-export interface signupInterface {
+export interface SignUpInterface {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
     maritalStatus: string;
+    gender:string
 };
   
-export interface loginInterface{
+export interface LoginInterface{
     email: string;
     password: string;
 

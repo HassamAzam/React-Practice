@@ -1,20 +1,24 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { sessionSetter } from "../../store/userSlice";
-import { FormControl, Button, Box, TextField } from "@mui/material";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { Typography } from "@mui/material";
 import { useEffect } from "react";
-import { loginRequest } from "../../sagaStore/sagas/authSagaSlice";
-import { authenticateUser } from "../../store/authSlice";
+
+import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
+import { authenticateUser } from "src/store/authSlice";
+import { loginRequest } from "src/sagaStore/sagas/authSagaSlice";
+import middleware from "src/settings";
+import { sessionSetter } from "src/store/userSlice";
+import setDocumentTitle from "src/Utilities/title";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+
 type FormValues = {
   email: string;
   password: string;
 };
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status, user } = useAppSelector((state) => state.auth);
@@ -29,8 +33,12 @@ export default function Login() {
     }
   }, [status, user]);
 
+  useEffect(() => {
+    setDocumentTitle("Login");
+  }, []);
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    if (import.meta.env.VITE_MIDDLEWARE == "thunk") {
+    if (middleware == "thunk") {
       dispatch(authenticateUser(data));
     } else {
       dispatch(loginRequest(data));
@@ -90,4 +98,5 @@ export default function Login() {
       </Button>
     </Box>
   );
-}
+};
+export default Login;

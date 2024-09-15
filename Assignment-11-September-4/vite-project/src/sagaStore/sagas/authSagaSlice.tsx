@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import Status from "src//Utilities/Enums";
 interface AuthState {
   user: any | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: Status;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 
@@ -19,19 +19,19 @@ const authSagaSlice = createSlice({
     logout(state) {
       state.user = null;
       sessionStorage.removeItem("userEmail");
-      state.status = "idle";
+      state.status = Status.Idle;
     },
     loginSuccess(state, action: PayloadAction<any>) {
       state.user = action.payload;
-      state.status = "succeeded";
+      state.status = Status.Success;
       sessionStorage.setItem("userEmail", action.payload.email); // Store user email
     },
     loginFailure(state) {
-      state.status = "failed";
+      state.status = Status.Failed;
       state.error = "Login failed";
     },
     loginRequest(state, _) {
-      state.status = "loading";
+      state.status = Status.Loading;
     },
   },
 });

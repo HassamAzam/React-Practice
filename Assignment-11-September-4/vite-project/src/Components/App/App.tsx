@@ -1,36 +1,48 @@
-import { Store } from "redux";
-import "./App.css";
-import { Provider } from "react-redux";
-import Dashboard from "../Dashboard/Dashboard";
-import SignUp from "../SignUp/SignUp";
 import { Routes, Route } from "react-router-dom";
-import Login from "../Login/Login";
-import ForgetPassword from "../Login/ForgetPassword";
-import DetailsForm from "../Dashboard/DetailsForm";
-import SurveyComponent from "../Dashboard/SurveyComponent";
-import sagaStore from "../../sagaStore/sagas/sagaStore";
-import store from "../../store/store";
+import { Provider } from "react-redux";
+import { Store } from "redux";
+import { lazy, Suspense } from "react";
 
-const selectedStore: Store =
-  import.meta.env.VITE_MIDDLEWARE === "thunk" ? store : sagaStore;
+import "./App.css";
 
-function App() {
+import middleware from "src/settings";
+import sagaStore from "src/sagaStore/sagaStore";
+import store from "src/store/store";
+
+const Dashboard = lazy(() => import("src/Components/Dashboard/Dashboard"));
+const DetailsForm = lazy(() => import("src/Components/Dashboard/DetailsForm"));
+const SurveyComponent = lazy(
+  () => import("src/Components/Dashboard/SurveyComponent")
+);
+const ForgetPassword = lazy(
+  () => import("src/Components/Login/ForgetPassword")
+);
+const Login = lazy(() => import("src/Components/Login/Login"));
+const PrivateComponent = lazy(() => import("src/Components/PrivateComponent"));
+const SignUp = lazy(() => import("src/Components/SignUp/SignUp"));
+
+const selectedStore: Store = middleware === "thunk" ? store : sagaStore;
+
+const App = () => {
   return (
-    <>
-      <Provider store={selectedStore}>
+    <Provider store={selectedStore}>
+      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path="/dashboard" element={<Dashboard />}>
+          <Route
+            path="/dashboard"
+            element={<PrivateComponent toBeAuthenticated={Dashboard} />}
+          >
             <Route path="profile" element={<DetailsForm />} />
             <Route path="questions" element={<SurveyComponent />} />
           </Route>
         </Routes>
-      </Provider>
-    </>
+      </Suspense>
+    </Provider>
   );
-}
+};
 
 export default App;

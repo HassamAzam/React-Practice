@@ -1,5 +1,6 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -8,12 +9,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
 
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { sessionRemover } from "../../store/userSlice";
-import { useAppDispatch } from "../../store/store";
-import { logout } from "../../sagaStore/sagas/authSagaSlice";
+
+import setDocumentTitle from "src/Utilities/title";
+import { logout } from "src/sagaStore/sagas/authSagaSlice";
+import { sessionRemover } from "src/store/userSlice";
+import { useAppDispatch } from "src/store/store";
+import { useEffect } from "react";
 
 const drawerWidth = 240;
 
@@ -26,9 +29,11 @@ export default function Dashboard() {
     dispatch(sessionRemover());
     navigate("/login");
   };
-
+  useEffect(() => {
+    setDocumentTitle("Dashboard");
+  }, []);
   const drawer = (
-    <div>
+    <Box>
       <Toolbar />
       <h1>Logo</h1>
       <Divider />
@@ -45,7 +50,7 @@ export default function Dashboard() {
         </ListItem>
       </List>
       <Divider />
-    </div>
+    </Box>
   );
 
   return (

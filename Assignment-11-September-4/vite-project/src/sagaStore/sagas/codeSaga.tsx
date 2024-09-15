@@ -1,13 +1,14 @@
-import { call, put, takeLatest } from "redux-saga/effects";
-import { AxiosResponse } from "axios";
 import emailjs from "@emailjs/browser";
+import axios, { AxiosResponse } from "axios";
+
+import { call, put, takeLatest } from "redux-saga/effects";
+
+import { BASE_URL, serviceID, templateID, emailToken } from "src/settings";
 import {
+  sendVerificationEmailFailure,
   sendVerificationEmailRequest,
   sendVerificationEmailSuccess,
-  sendVerificationEmailFailure,
 } from "./codeSagaSlice";
-import { BASE_URL } from "../../Utilities/baseURL";
-import axios from "axios";
 
 const checkUserExists = async (email: string): Promise<any> => {
   try {
@@ -27,12 +28,7 @@ const sendEmail = async (email: string, user: any): Promise<void> => {
     message: `Your user details: ${JSON.stringify(user)}`,
   };
 
-  await emailjs.send(
-    "service_hy6uao9",
-    "template_310losc",
-    emailParams,
-    "IZwPmNZdJoi2j0ttx"
-  );
+  await emailjs.send(serviceID, templateID, emailParams, emailToken);
 };
 
 function* sendVerificationEmailSaga(action: {

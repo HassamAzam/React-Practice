@@ -1,13 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import createSagaMiddleware from "@redux-saga/core";
 
-import { useSelector, useDispatch } from "react-redux";
-import { combineReducers } from "@reduxjs/toolkit";
-import authSagaSlice from "./authSagaSlice";
-import userSlice from "../../store/userSlice";
-import signUpSagaSlice from "./signUpSagaSlice";
-import codeSagaSlice from "./codeSagaSlice";
-import { rootSaga } from "./rootSaga";
+import { useDispatch, useSelector } from "react-redux";
+
+import authSagaSlice from "src/sagaStore/sagas/authSagaSlice";
+import codeSagaSlice from "src/sagaStore/sagas/codeSagaSlice";
+import signUpSagaSlice from "src/sagaStore/sagas/signUpSagaSlice";
+import userSlice from "src/store/userSlice";
+import { rootSaga } from "src/sagaStore/sagas/rootSaga";
+
 const sagaMiddleware = createSagaMiddleware();
 const combineReducer = combineReducers({
   auth: authSagaSlice,

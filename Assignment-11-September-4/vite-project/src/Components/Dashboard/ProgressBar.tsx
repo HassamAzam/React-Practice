@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { LinearProgress, Button } from "@mui/material";
-export default function ProgressBar() {
+
+import { LinearProgress, Button, Box } from "@mui/material";
+const ProgressBar=()=>{
   const [progress, setProgress] = useState(0);
   const handleClick = () => {
     setProgress((progress) => {
@@ -10,12 +11,13 @@ export default function ProgressBar() {
   };
 
   return (
-    <div>
+    <Box>
       <LinearProgress variant="buffer" value={progress} />
       <br></br>
       <Button onClick={handleClick} variant="contained">
         Increase Progress
       </Button>
-    </div>
+    </Box>
   );
 }
+export default ProgressBar

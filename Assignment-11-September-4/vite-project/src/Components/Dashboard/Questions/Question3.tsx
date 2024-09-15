@@ -1,12 +1,12 @@
 import { TextField } from "@mui/material";
 
-export default function Question3({
+const Question3=({
   answer,
   setAnswer,
 }: {
   answer: string;
   setAnswer: (value: string) => void;
-}) {
+}) =>{
   return (
     <>
       <h1>"How would you describe your reason to stay?"</h1>
@@ -20,3 +20,4 @@ export default function Question3({
     </>
   );
 }
+export default Question3

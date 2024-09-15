@@ -1,8 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import emailjs from "@emailjs/browser";
-import axios from "axios";
-import { BASE_URL } from "../Utilities/baseURL";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
+
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { BASE_URL, templateID, serviceID, emailToken } from "src/settings";
+import Status from "src/Utilities/Enums";
 
 const checkUserExists = async (email: string): Promise<any> => {
   try {
@@ -32,10 +34,10 @@ export const sendVerificationEmail = createAsyncThunk(
       };
 
       await emailjs.send(
-        "service_hy6uao9",
-        "template_310losc",
+        serviceID,
+        templateID,
         emailParams,
-        "IZwPmNZdJoi2j0ttx"
+        emailToken
       );
 
       return { message: "Verification email sent successfully" };
@@ -56,13 +58,13 @@ const codeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(sendVerificationEmail.fulfilled, (state) => {
-        state.status = "success";
+        state.status = Status.Success;
       })
       .addCase(sendVerificationEmail.rejected, (state) => {
-        state.status = "failed";
+        state.status = Status.Failed;
       })
       .addCase(sendVerificationEmail.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
       });
   },
 });

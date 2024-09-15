@@ -5,13 +5,13 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
-export default function Question1({
+const Question1 = ({
   answer,
   setAnswer,
 }: {
   answer: string;
   setAnswer: (value: string) => void;
-}) {
+}) => {
   return (
     <>
       <h1>Are you from Pakistan</h1>
@@ -28,4 +28,5 @@ export default function Question1({
       </FormControl>
     </>
   );
-}
+};
+export default Question1;

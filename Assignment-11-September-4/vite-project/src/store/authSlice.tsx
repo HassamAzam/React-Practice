@@ -1,24 +1,27 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { loginInterface } from "../Utilities/interfaces";
-import { BASE_URL } from "../Utilities/baseURL";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { BASE_URL } from "../settings";
+import { LoginInterface } from "../Utilities/interfaces";
+import Status from "../Utilities/Enums";
 
 interface AuthState {
   user: any | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: Status;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 
 export const authenticateUser = createAsyncThunk(
   "auth",
-  async (credentials: loginInterface, thunkAPI) => {
+  async (credentials: LoginInterface, thunkAPI) => {
     try {
+      
       const response = await axios.get(
         `${BASE_URL}/users?email=${credentials.email}`
       );
@@ -42,21 +45,21 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       sessionStorage.removeItem("userEmail");
-      state.status = "idle";
+      state.status = Status.Idle;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(authenticateUser.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
       })
       .addCase(authenticateUser.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = Status.Loading;
         state.user = action.payload;
         state.error = null;
       })
       .addCase(authenticateUser.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = Status.Failed;
         state.error = action.payload as string;
       });
   },

@@ -1,34 +1,42 @@
+import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
+
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormControl, Button, Box, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { sendVerificationEmail } from "../../store/loginThroughCodeSlice";
 import { useEffect } from "react";
-import { sendVerificationEmailRequest } from "../../sagaStore/sagas/codeSagaSlice";
+import { useNavigate } from "react-router-dom";
+
+import middleware from "src/settings";
+import setDocumentTitle from "src/Utilities/title";
+import Status from "src/Utilities/Enums";
+import { sendVerificationEmail } from "src/store/loginThroughCodeSlice";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { sendVerificationEmailRequest } from "src/sagaStore/sagas/codeSagaSlice";
 
 type FormValues = {
   email: string;
 };
 
-const ForgetPassword: React.FC = () => {
+const ForgetPassword = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<FormValues>();
   const { status } = useAppSelector((state) => state.code);
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === Status.Success) {
       toast.success("Details have been sent to your email");
       navigate("/login");
     } else if (status === "failed") {
       toast.error("Failed to send details to your email");
     }
   }, [status]);
+  useEffect(() => {
+    setDocumentTitle("Forget Password");
+  }, []);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    if (import.meta.env.VITE_MIDDLEWARE === "thunk") {
+    if (middleware === "thunk") {
       dispatch(sendVerificationEmail(data.email));
     } else {
       dispatch(sendVerificationEmailRequest({ email: data.email }));

@@ -1,4 +1,5 @@
-import React from "react";
+import { ChangeEvent } from "react";
+
 import {
   FormControl,
   FormGroup,
@@ -6,17 +7,19 @@ import {
   Checkbox,
 } from "@mui/material";
 
-export default function Question2({
+const Question2=({
   answers,
   setAnswers,
 }: {
   answers: string[];
   setAnswers: (value: string[]) => void;
-}) {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAnswers = event.target.checked
-      ? [...answers, event.target.name]
-      : answers.filter((answer) => answer !== event.target.name);
+})=> {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    const newAnswers = checked
+      ? [...answers, name]
+      : answers.filter((answer) => answer !== name);
+
     setAnswers(newAnswers);
   };
 
@@ -70,3 +73,5 @@ export default function Question2({
     </>
   );
 }
+
+export default Question2

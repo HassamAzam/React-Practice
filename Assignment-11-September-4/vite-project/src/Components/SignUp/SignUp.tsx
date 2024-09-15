@@ -1,30 +1,35 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import {
-  FormControl,
-  Button,
   Box,
-  TextField,
-  Select,
-  MenuItem,
+  Button,
+  FormControl,
   InputLabel,
+  MenuItem,
+  Select,
+  TextField,
   Typography,
 } from "@mui/material";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch } from "../../store/store";
-import { signUp, resetState } from "../../store/signUpSlice";
-import { useAppSelector } from "../../store/store";
-import { useEffect } from "react";
-import { signupInterface } from "../../Utilities/interfaces";
-import { signUpRequest } from "../../sagaStore/sagas/signUpSagaSlice";
+import { useNavigate } from "react-router-dom";
 
-export default function SignUp() {
+import middleware from "src/settings";
+import setDocumentTitle from "src/Utilities/title";
+import { SignUpInterface } from "src/Utilities/interfaces";
+import { resetState, signUp } from "src/store/signUpSlice";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { signUpRequest } from "src/sagaStore/sagas/signUpSagaSlice";
+
+const SignUp = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<signupInterface>();
+  const { register, handleSubmit } = useForm<SignUpInterface>();
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.signUp);
+
+  // Array of genders
+  const genderOptions = ["Male", "Female", "Other"];
 
   useEffect(() => {
     if (status === "succeeded") {
@@ -39,17 +44,17 @@ export default function SignUp() {
     };
   }, [status]);
 
-  const onSubmit: SubmitHandler<signupInterface> = async (data) => {
-    
-      if (import.meta.env.VITE_MIDDLEWARE == "thunk") {
+  useEffect(() => {
+    setDocumentTitle("Sign Up");
+  }, []);
 
-        await dispatch(signUp(data)).unwrap();
-      }
-      else {
-        dispatch(signUpRequest(data))
-      }
-      
-    } 
+  const onSubmit: SubmitHandler<SignUpInterface> = async (data) => {
+    if (middleware == "thunk") {
+      await dispatch(signUp(data)).unwrap();
+    } else {
+      dispatch(signUpRequest(data));
+    }
+  };
 
   return (
     <Box
@@ -114,10 +119,30 @@ export default function SignUp() {
         </FormControl>
         <br />
         <br />
+
+        <FormControl fullWidth>
+          <InputLabel id="gender-label">Gender</InputLabel>
+          <Select
+            labelId="gender-label"
+            label="Gender"
+            defaultValue=""
+            {...register("gender", { required: "Gender is required" })}
+          >
+            {genderOptions.map((gender) => (
+              <MenuItem key={gender} value={gender}>
+                {gender}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <br />
+        <br />
         <Button type="submit" variant="contained">
           Sign Up
         </Button>
       </Box>
     </Box>
   );
-}
+};
+
+export default SignUp;

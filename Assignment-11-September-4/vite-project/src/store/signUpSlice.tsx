@@ -1,25 +1,26 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../Utilities/baseURL";
-import { signupInterface } from "../Utilities/interfaces";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { BASE_URL } from "src/settings";
+import { SignUpInterface } from "src/Utilities/interfaces";
+import Status from "src/Utilities/Enums";
 
 interface SignUpState {
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: Status;
   error: string | null;
 }
 
 const initialState: SignUpState = {
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 export const signUp = createAsyncThunk(
   "user/signUp",
-  async (user: signupInterface, thunkAPI) => {
+  async (user: SignUpInterface, thunkAPI) => {
     try {
       const response = await axios.get(`${BASE_URL}/users?email=${user.email}`);
       if (response.data.length > 0) {
       }
-
       return true;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -41,21 +42,21 @@ const signUpSlice = createSlice({
   initialState,
   reducers: {
     resetState: (state) => {
-      (state.status = "idle"), (state.error = null);
+      (state.status = Status.Idle), (state.error = null);
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(signUp.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
         state.error = null;
       })
       .addCase(signUp.fulfilled, (state) => {
-        state.status = "succeeded";
+        state.status = Status.Success;
         state.error = null;
       })
       .addCase(signUp.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = Status.Failed;
         state.error = action.payload as string;
       });
   },

@@ -1,21 +1,23 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../Utilities/baseURL";
-import { signupInterface } from "../Utilities/interfaces";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { BASE_URL } from "src/settings";
+import { SignUpInterface } from "src/Utilities/interfaces";
+import Status from "src/Utilities/Enums";
 
 interface UpdateState {
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: Status;
   error: string | null;
 }
 
 const initialState: UpdateState = {
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 
 export const updateUser = createAsyncThunk(
   "updateUser",
-  async (user: signupInterface, thunkAPI) => {
+  async (user: SignUpInterface, thunkAPI) => {
     try {
       const fetchResponse = await axios.get(
         `${BASE_URL}/users?email=${user.email}`
@@ -39,15 +41,15 @@ const updateSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(updateUser.pending, (state) => {
-        state.status = "loading";
+        state.status = Status.Loading;
         state.error = null;
       })
       .addCase(updateUser.fulfilled, (state) => {
-        state.status = "succeeded";
+        state.status = Status.Success;
         state.error = null;
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = Status.Failed;
         state.error = action.payload as string;
       });
   },

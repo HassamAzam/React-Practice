@@ -1,25 +1,28 @@
-import { useState } from "react";
 import { Box, Button, LinearProgress } from "@mui/material";
+import { useState } from "react";
+
 import Question1 from "./Questions/Question1";
 import Question2 from "./Questions/Question2";
 import Question3 from "./Questions/Question3";
 
-export default function SurveyComponent() {
-  const [step, setStep] = useState(0);
+const SurveyComponent = () => {
+  const [currenQuestionIndex, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({
     question1: "",
     question2: [] as string[],
     question3: "",
   });
 
-  const handleNext = () => setStep((prevStep) => prevStep + 1);
-  const handleBack = () => setStep((prevStep) => prevStep - 1);
+  const handleNext = () =>
+    setCurrentQuestion((prevQuestionIndex) => prevQuestionIndex + 1);
+  const handleBack = () =>
+    setCurrentQuestion((prevQuestoinIndex) => prevQuestoinIndex - 1);
   const handleSubmit = () => {
     handleNext();
   };
 
   const renderQuestion = () => {
-    switch (step) {
+    switch (currenQuestionIndex) {
       case 0:
         return (
           <Question1
@@ -42,18 +45,21 @@ export default function SurveyComponent() {
           />
         );
       default:
-        return null;
+        return <></>;
     }
   };
 
   return (
     <Box>
-      {step !== 3 && (
+      {currenQuestionIndex !== 3 && (
         <>
-          <LinearProgress variant="determinate" value={(step / 3) * 100} />
+          <LinearProgress
+            variant="determinate"
+            value={(currenQuestionIndex / 3) * 100}
+          />
           <Box my={4}>{renderQuestion()}</Box>
           <Box mt={4}>
-            {step > 0 && (
+            {currenQuestionIndex > 0 && (
               <Button
                 variant="contained"
                 color="primary"
@@ -63,7 +69,7 @@ export default function SurveyComponent() {
                 Back
               </Button>
             )}
-            {step < 2 ? (
+            {currenQuestionIndex < 2 ? (
               <Button
                 variant="contained"
                 color="secondary"
@@ -84,7 +90,7 @@ export default function SurveyComponent() {
         </>
       )}
 
-      {step === 3 && (
+      {currenQuestionIndex === 3 && (
         <Box>
           <h2>Survey Results</h2>
           <p>From Pakistan: {answers.question1}</p>
@@ -94,4 +100,5 @@ export default function SurveyComponent() {
       )}
     </Box>
   );
-}
+};
+export default SurveyComponent;

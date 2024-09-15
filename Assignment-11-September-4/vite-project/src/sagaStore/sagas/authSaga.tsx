@@ -1,16 +1,18 @@
-import { call, put, takeLatest } from "redux-saga/effects";
 import axios, { AxiosResponse } from "axios";
-import { loginSuccess, loginFailure, loginRequest } from "./authSagaSlice";
-import { loginInterface } from "../../Utilities/interfaces";
-import { BASE_URL } from "../../Utilities/baseURL";
+
+import { call, put, takeLatest } from "redux-saga/effects";
+
+import { BASE_URL } from "src/settings";
+import { LoginInterface } from "src/Utilities/interfaces";
+import { loginFailure, loginRequest, loginSuccess } from "./authSagaSlice";
 
 const authenticate = async (
-  credentials: loginInterface
+  credentials: LoginInterface
 ): Promise<AxiosResponse> => {
   return await axios.get(`${BASE_URL}/users?email=${credentials.email}`);
 };
 
-function* loginSaga(action: { type: string; payload: loginInterface }) {
+function* loginSaga(action: { type: string; payload: LoginInterface }) {
   try {
     const response: AxiosResponse = yield call(authenticate, action.payload);
     const user = response.data[0];
@@ -26,5 +28,5 @@ function* loginSaga(action: { type: string; payload: loginInterface }) {
 }
 
 export default function* watchLoginSaga() {
-  yield takeLatest(loginRequest.type, loginSaga);//listening to login Request
+  yield takeLatest(loginRequest.type, loginSaga); //listening to login Request
 }

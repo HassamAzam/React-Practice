@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Status from "src/Utilities/Enums";
 
 interface SignUpState {
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: Status;
   error: string | null;
 }
 
 const initialState: SignUpState = {
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 
@@ -15,19 +16,19 @@ const signUpSagaSlice = createSlice({
   initialState,
   reducers: {
     resetState: (state) => {
-      state.status = "idle";
+      state.status = Status.Idle;
       state.error = null;
     },
     signUpSuccess: (state) => {
-      state.status = "succeeded";
+      state.status = Status.Success;
       state.error = null;
     },
     signUpFailure: (state, action: PayloadAction<{ message: string }>) => {
-      state.status = "failed";
+      state.status = Status.Failed;
       state.error = action.payload.message;
     },
-    signUpRequest: (state,_) => {
-      state.status = "loading";
+    signUpRequest: (state, _) => {
+      state.status = Status.Loading;
     },
   },
 });

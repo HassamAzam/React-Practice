@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Status from "src/Utilities/Enums";
 
 interface CodeState {
-  status: "idle" | "loading" | "success" | "failed";
+  status: Status;
   error: string | null;
 }
 
 const initialState: CodeState = {
-  status: "idle",
+  status: Status.Idle,
   error: null,
 };
 
@@ -18,15 +19,15 @@ const codeSagaSlice = createSlice({
       state,
       _: PayloadAction<{ email: string }>
     ) => {
-      state.status = "loading";
+      state.status = Status.Loading;
       state.error = null;
     },
     sendVerificationEmailSuccess: (state) => {
-      state.status = "success";
+      state.status = Status.Loading;
       state.error = null;
     },
     sendVerificationEmailFailure: (state, action: PayloadAction<string>) => {
-      state.status = "failed";
+      state.status = Status.Failed;
       state.error = action.payload;
     },
   },
