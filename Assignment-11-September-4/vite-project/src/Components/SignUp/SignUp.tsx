@@ -29,7 +29,6 @@ const SignUp = () => {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.signUp);
 
-  // Array of genders
   const genderOptions = ["Male", "Female", "Other"];
 
   useEffect(() => {
