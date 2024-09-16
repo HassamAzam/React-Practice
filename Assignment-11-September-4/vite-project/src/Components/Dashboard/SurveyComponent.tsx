@@ -1,65 +1,56 @@
 import { Box, Button, LinearProgress } from "@mui/material";
+
 import { useState } from "react";
 
-import Question1 from "./Questions/Question1";
-import Question2 from "./Questions/Question2";
-import Question3 from "./Questions/Question3";
+import { questionsConfig } from "./questionsConfig";
+import QuestionRenderer from "./QuestionRenderer";
+
+type Answers = {
+  [key: string]: string | string[];
+};
 
 const SurveyComponent = () => {
-  const [currenQuestionIndex, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({
+  const [currentQuestionIndex, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<Answers>({
     question1: "",
     question2: [] as string[],
     question3: "",
+    question4:""
   });
 
   const handleNext = () =>
     setCurrentQuestion((prevQuestionIndex) => prevQuestionIndex + 1);
   const handleBack = () =>
-    setCurrentQuestion((prevQuestoinIndex) => prevQuestoinIndex - 1);
+    setCurrentQuestion((prevQuestionIndex) => prevQuestionIndex - 1);
   const handleSubmit = () => {
     handleNext();
   };
 
-  const renderQuestionComponent = () => {
-    switch (currenQuestionIndex) {
-      case 0:
-        return (
-          <Question1
-            answer={answers.question1}
-            setAnswer={(value) => setAnswers({ ...answers, question1: value })}
-          />
-        );
-      case 1:
-        return (
-          <Question2
-            answers={answers.question2}
-            setAnswers={(value) => setAnswers({ ...answers, question2: value })}
-          />
-        );
-      case 2:
-        return (
-          <Question3
-            answer={answers.question3}
-            setAnswer={(value) => setAnswers({ ...answers, question3: value })}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  const currentQuestionConfig = questionsConfig[currentQuestionIndex];
 
   return (
     <Box>
-      {currenQuestionIndex !== 3 && (
+      {currentQuestionIndex < questionsConfig.length && (
         <>
           <LinearProgress
             variant="determinate"
-            value={(currenQuestionIndex / 3) * 100}
+            value={(currentQuestionIndex / questionsConfig.length) * 100}
           />
-          <Box my={4}>{renderQuestionComponent()}</Box>
+          <Box my={4}>
+            <h1>{currentQuestionConfig.question}</h1>
+            <QuestionRenderer
+              questionConfig={currentQuestionConfig}
+              answer={answers[currentQuestionConfig.key]}
+              setAnswer={(value) =>
+                setAnswers({
+                  ...answers,
+                  [currentQuestionConfig.key]: value,
+                })
+              }
+            />
+          </Box>
           <Box mt={4}>
-            {currenQuestionIndex > 0 && (
+            {currentQuestionIndex > 0 && (
               <Button
                 variant="contained"
                 color="primary"
@@ -69,7 +60,7 @@ const SurveyComponent = () => {
                 Back
               </Button>
             )}
-            {currenQuestionIndex < 2 ? (
+            {currentQuestionIndex < questionsConfig.length - 1 ? (
               <Button
                 variant="contained"
                 color="secondary"
@@ -90,12 +81,13 @@ const SurveyComponent = () => {
         </>
       )}
 
-      {currenQuestionIndex === 3 && (
+      {currentQuestionIndex === questionsConfig.length && (
         <Box>
           <h2>Survey Results</h2>
           <p>From Pakistan: {answers.question1}</p>
-          <p>Countries to Visit: {answers.question2.join(", ")}</p>
+          <p>Countries to Visit: {(answers.question2 as string[]).join(", ")}</p>
           <p>Reason to Stay: {answers.question3}</p>
+          <p>Countries you have visited: { answers.question4}</p>
         </Box>
       )}
     </Box>

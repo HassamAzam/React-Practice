@@ -9,5 +9,10 @@ export default defineConfig({
     alias: {
       src: "/src",
     },
+    
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
   },
 });
