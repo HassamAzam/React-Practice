@@ -1,18 +1,18 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { Box, Button, FormControl, TextField, Typography } from '@mui/material';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
-import { authenticateUser } from "src/store/authSlice";
-import { loginRequest } from "src/sagaStore/sagas/authSagaSlice";
-import { isMiddleware } from "src/settings";
-import { sessionSetter } from "src/store/userSlice";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import useDocumentTitle from "src/Hooks/useDocumentTitle";
-import Status from "src/Utilities/Enums";
+import { authenticateUser } from 'src/store/authSlice';
+import { loginRequest } from 'src/sagaStore/sagas/authSagaSlice';
+import { isMiddleware } from 'src/settings';
+import { sessionSetter } from 'src/store/userSlice';
+import { useAppDispatch, useAppSelector } from 'src/store/store';
+import useDocumentTitle from 'src/Hooks/useDocumentTitle';
+import Status from 'src/Utilities/Enums';
 
 type FormValues = {
   email: string;
@@ -20,7 +20,7 @@ type FormValues = {
 };
 
 const Login = () => {
-  useDocumentTitle("Login");
+  useDocumentTitle('Login');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status, user } = useAppSelector((state) => state.auth);
@@ -28,11 +28,11 @@ const Login = () => {
 
   useEffect(() => {
     if (status === Status.Success) {
-      toast.success("Logged In");
+      toast.success('Logged In');
       dispatch(sessionSetter(user));
-      navigate("/dashboard");
+      navigate('/dashboard');
     } else if (status === Status.Failed) {
-      toast.error("Email or Password is wrong");
+      toast.error('Email or Password is wrong');
     }
   }, [status, user]);
 
@@ -43,33 +43,34 @@ const Login = () => {
       dispatch(loginRequest(data));
     }
   };
+
   const handleForgetPasswordClick = () => {
-    navigate("/forgetPassword");
+    navigate('/forgetPassword');
   };
 
   return (
     <Box
       sx={{
-        border: "1px solid black",
+        border: '1px solid black',
         borderRadius: 2,
         padding: 9,
-        backgroundColor: "white",
+        backgroundColor: 'white',
       }}
     >
-      <Typography variant="h6" sx={{ color: "black" }}>
+      <Typography variant="h6" sx={{ color: 'black' }}>
         Login
       </Typography>
       <br />
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
-          <TextField label="Email" {...register("email")} type="email" />
+          <TextField label="Email" {...register('email')} type="email" />
         </FormControl>
         <br></br>
         <br></br>
         <FormControl>
           <TextField
             label="Password"
-            {...register("password")}
+            {...register('password')}
             type="password"
           />
           <br></br>
@@ -91,7 +92,7 @@ const Login = () => {
       <Button
         variant="contained"
         color="secondary"
-        onClick={() => navigate("/signup")}
+        onClick={() => navigate('/signup')}
       >
         SignUp
       </Button>
@@ -100,4 +101,3 @@ const Login = () => {
 };
 
 export default Login;
-

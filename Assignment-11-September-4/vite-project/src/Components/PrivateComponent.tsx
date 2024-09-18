@@ -1,10 +1,11 @@
-import React from "react";
-import { useAppSelector } from "../store/store";
-import { Navigate } from "react-router-dom";
-import Status from "src/Utilities/Enums";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+
+import { useAppSelector } from 'src/store/store';
+import Status from 'src/Utilities/Enums';
 
 interface ComponentForPrivateRoute {
-  component: React.ComponentType; // Expecting a component type
+  component: React.ComponentType;
   route: string;
 }
 
@@ -16,11 +17,7 @@ const PrivateComponent = ({
 
   return (
     <>
-      {authStatus === Status.Success ? (
-        <Component /> 
-      ) : (
-        <Navigate to={route} />
-      )}
+      {authStatus === Status.Success ? <Component /> : <Navigate to={route} />}
     </>
   );
 };

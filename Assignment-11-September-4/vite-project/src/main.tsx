@@ -1,11 +1,12 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./Components/App/App";
-import "./index.css";
-import { ToastContainer } from "react-toastify";
-import { BrowserRouter } from "react-router-dom";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { ToastContainer } from 'react-toastify';
+import { BrowserRouter } from 'react-router-dom';
 
-createRoot(document.getElementById("root")!).render(
+import App from 'src/Components/App/App';
+import 'src/index.css';
+
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <ToastContainer />

@@ -1,8 +1,8 @@
-import axios from "axios";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from 'axios';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { SignUpInterface } from "src/Utilities/interfaces";
-import Status from "src/Utilities/Enums";
+import { SignUpInterface } from 'src/Utilities/interfaces';
+import Status from 'src/Utilities/Enums';
 
 interface SignUpState {
   status: Status;
@@ -13,8 +13,9 @@ const initialState: SignUpState = {
   status: Status.Idle,
   error: null,
 };
+
 export const signUp = createAsyncThunk(
-  "user/signUp",
+  'user/signUp',
   async (user: SignUpInterface, thunkAPI) => {
     try {
       const response = await axios.get(`users?email=${user.email}`);
@@ -25,19 +26,19 @@ export const signUp = createAsyncThunk(
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === Status.NotFound) {
           await axios.post(`/users`, user);
-          return thunkAPI.fulfillWithValue("Success");
+          return thunkAPI.fulfillWithValue('Success');
         } else {
-          return thunkAPI.rejectWithValue("An error occurred during sign-up");
+          return thunkAPI.rejectWithValue('An error occurred during sign-up');
         }
       }
 
-      return thunkAPI.rejectWithValue("An error occurred during sign-up");
+      return thunkAPI.rejectWithValue('An error occurred during sign-up');
     }
   },
 );
 
 const signUpSlice = createSlice({
-  name: "signUpSlice",
+  name: 'signUpSlice',
   initialState,
   reducers: {
     resetState: (state) => {
@@ -60,5 +61,6 @@ const signUpSlice = createSlice({
       });
   },
 });
+
 export const { resetState } = signUpSlice.actions;
 export default signUpSlice.reducer;

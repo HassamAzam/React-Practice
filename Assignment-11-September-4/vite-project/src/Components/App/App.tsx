@@ -13,6 +13,7 @@ import SurveyComponent from 'src/Components/Dashboard/SurveyComponent';
 
 const Dashboard = lazy(() => import('src/Components/Dashboard/Dashboard'));
 const PrivateComponent = lazy(() => import('src/Components/PrivateComponent'));
+
 const selectedStore: Store = configureStore();
 
 const App = () => {
@@ -22,7 +23,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route

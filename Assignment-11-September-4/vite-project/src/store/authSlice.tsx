@@ -1,8 +1,8 @@
-import axios from "axios";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from 'axios';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { LoginInterface, SignUpInterface } from "../Utilities/interfaces";
-import Status from "../Utilities/Enums";
+import { LoginInterface, SignUpInterface } from 'src/Utilities/interfaces';
+import Status from 'src/Utilities/Enums';
 
 interface AuthState {
   user: SignUpInterface | null;
@@ -17,30 +17,30 @@ const initialState: AuthState = {
 };
 
 export const authenticateUser = createAsyncThunk(
-  "auth",
+  'auth',
   async (credentials: LoginInterface, thunkAPI) => {
     try {
       const response = await axios.get(`users?email=${credentials.email}`);
       if (response.data.length) {
         if (response.data[0].password === credentials.password) {
-          sessionStorage.setItem("userEmail", JSON.stringify(response.data[0]));
+          sessionStorage.setItem('userEmail', JSON.stringify(response.data[0]));
           return response.data[0];
         }
       }
-      return thunkAPI.rejectWithValue("Invalid credentials");
+      return thunkAPI.rejectWithValue('Invalid credentials');
     } catch (error) {
-      return thunkAPI.rejectWithValue("An error occurred");
+      return thunkAPI.rejectWithValue('An error occurred');
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     logout(state) {
       state.user = null;
-      sessionStorage.removeItem("userEmail");
+      sessionStorage.removeItem('userEmail');
       state.status = Status.Idle;
     },
   },

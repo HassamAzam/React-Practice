@@ -1,10 +1,10 @@
-import { Box, Button, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from '@mui/material';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { questionsConfig } from "./questionsConfig";
-import QuestionRenderer from "./QuestionRenderer";
-import SurveyResults from "./SurveyResult";
+import { questionsConfig } from 'src/Components/Dashboard/questionsConfig';
+import QuestionRenderer from 'src/Components/Dashboard/QuestionRenderer';
+import SurveyResults from 'src/Components/Dashboard/SurveyResult';
 
 type Answers = {
   [key: string]: string | string[];
@@ -13,10 +13,10 @@ type Answers = {
 const SurveyComponent = () => {
   const [currentQuestionIndex, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Answers>({
-    question1: "",
+    question1: '',
     question2: [] as string[],
-    question3: "",
-    question4: "",
+    question3: '',
+    question4: '',
   });
 
   const handleNext = () =>

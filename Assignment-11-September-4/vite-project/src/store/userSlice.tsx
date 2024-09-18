@@ -1,19 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const loadUserFromSessionStorage = () => {
   try {
-    const serializedState = sessionStorage.getItem("userEmail");
+    const serializedState = sessionStorage.getItem('userEmail');
     return serializedState ? JSON.parse(serializedState) : null;
   } catch (e) {
     return null;
   }
 };
+
 const initialState = {
   value: loadUserFromSessionStorage(),
 };
 
 const userSlice = createSlice({
-  name: "userSlice",
+  name: 'userSlice',
   initialState,
   reducers: {
     sessionSetter: (state, action) => {
@@ -24,5 +25,6 @@ const userSlice = createSlice({
     },
   },
 });
+
 export default userSlice.reducer;
 export const { sessionSetter, sessionRemover } = userSlice.actions;

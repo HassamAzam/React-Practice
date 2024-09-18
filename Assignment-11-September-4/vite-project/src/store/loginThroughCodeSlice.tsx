@@ -1,52 +1,47 @@
-import emailjs from "@emailjs/browser";
-import axios, { AxiosResponse } from "axios";
+import emailjs from '@emailjs/browser';
+import axios, { AxiosResponse } from 'axios';
 
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { templateID, serviceID, emailToken } from "src/settings";
-import Status from "src/Utilities/Enums";
-import { LoginInterface } from "src/Utilities/interfaces";
+import { templateID, serviceID, emailToken } from 'src/settings';
+import Status from 'src/Utilities/Enums';
+import { LoginInterface } from 'src/Utilities/interfaces';
 
 const checkUserExists = async (email: string): Promise<LoginInterface> => {
   try {
-    const response: AxiosResponse = await axios.get(
-      `users?email=${email}`
-    );
+    const response: AxiosResponse = await axios.get(`users?email=${email}`);
     return response.data[0] || null;
   } catch (error) {
-    throw new Error("Failed to check user existence");
+    throw new Error('Failed to check user existence');
   }
 };
 
 export const sendVerificationEmail = createAsyncThunk(
-  "auth/sendVerificationEmail",
+  'auth/sendVerificationEmail',
   async (email: string, { rejectWithValue }) => {
     try {
       const user = await checkUserExists(email);
 
       if (!user) {
-        return rejectWithValue("User does not exist");
+        return rejectWithValue('User does not exist');
       }
-
       const emailParams = {
         to_name: email,
-        from_name: "SurveyCopsTeam",
+        from_name: 'SurveyCopsTeam',
         message: `Your user details: ${JSON.stringify(user)}`,
       };
-
       await emailjs.send(serviceID, templateID, emailParams, emailToken);
-
-      return { message: "Verification email sent successfully" };
+      return { message: 'Verification email sent successfully' };
     } catch (error) {
-      return rejectWithValue("Failed to send verification email");
+      return rejectWithValue('Failed to send verification email');
     }
-  }
+  },
 );
 
 const codeSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
-    status: "idle",
+    status: 'idle',
   },
   reducers: {},
   extraReducers: (builder) => {

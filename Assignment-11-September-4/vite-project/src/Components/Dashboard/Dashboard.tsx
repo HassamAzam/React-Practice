@@ -1,3 +1,5 @@
+import { Outlet, useNavigate } from 'react-router-dom';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -6,9 +8,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 
-import { Outlet, useNavigate } from 'react-router-dom';
-
-import MenuList from './MenuList';
+import MenuList from 'src/Components/Dashboard/MenuList';
 import { logout } from 'src/sagaStore/sagas/authSagaSlice';
 import { sessionRemover } from 'src/store/userSlice';
 import { useAppDispatch } from 'src/store/store';

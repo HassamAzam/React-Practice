@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { questionsConfig } from "./questionsConfig";
+import { Box } from '@mui/material';
+import { questionsConfig } from 'src/Components/Dashboard/questionsConfig';
 
 type SurveyResultsProps = {
   answers: {
@@ -13,9 +13,9 @@ const SurveyResults = ({ answers }: SurveyResultsProps) => {
       <h2>Survey Results</h2>
       {questionsConfig.map((question) => (
         <p key={question.key}>
-          {question.question}:{" "}
+          {question.question}:{' '}
           {Array.isArray(answers[question.key])
-            ? (answers[question.key] as string[]).join(", ")
+            ? (answers[question.key] as string[]).join(', ')
             : answers[question.key]}
         </p>
       ))}

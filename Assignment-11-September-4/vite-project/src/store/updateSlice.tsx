@@ -1,8 +1,8 @@
-import axios from "axios";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from 'axios';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { SignUpInterface } from "src/Utilities/interfaces";
-import Status from "src/Utilities/Enums";
+import { SignUpInterface } from 'src/Utilities/interfaces';
+import Status from 'src/Utilities/Enums';
 
 interface UpdateState {
   status: Status;
@@ -15,26 +15,24 @@ const initialState: UpdateState = {
 };
 
 export const updateUser = createAsyncThunk(
-  "updateUser",
+  'updateUser',
   async (user: SignUpInterface, thunkAPI) => {
     try {
-      const fetchResponse = await axios.get(
-        `/users?email=${user.email}`,
-      );
+      const fetchResponse = await axios.get(`/users?email=${user.email}`);
       if (!fetchResponse.data.length) {
-        return thunkAPI.rejectWithValue("User does not exist");
+        return thunkAPI.rejectWithValue('User does not exist');
       }
       const fetchedUser = fetchResponse.data[0];
       await axios.put(`/users/${fetchedUser.id}`, user);
       return true;
     } catch (error) {
-      return thunkAPI.rejectWithValue("An error occurred during update");
+      return thunkAPI.rejectWithValue('An error occurred during update');
     }
   },
 );
 
 const updateSlice = createSlice({
-  name: "updateSlice",
+  name: 'updateSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
