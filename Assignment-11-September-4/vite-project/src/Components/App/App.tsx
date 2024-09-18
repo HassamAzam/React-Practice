@@ -22,8 +22,14 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          
+
+
+
+
+          
           <Route path="/login" element={<Login />} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/forgetPassword"element={<ForgetPassword />} />
           <Route
             path="/dashboard"
             element={<PrivateComponent route="/login" component={Dashboard} />}
