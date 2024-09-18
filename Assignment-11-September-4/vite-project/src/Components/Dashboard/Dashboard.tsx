@@ -4,23 +4,20 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
-import setDocumentTitle from "src/Utilities/title";
+import MenuList from "./MenuList";
 import { logout } from "src/sagaStore/sagas/authSagaSlice";
 import { sessionRemover } from "src/store/userSlice";
 import { useAppDispatch } from "src/store/store";
-import { useEffect } from "react";
+import useDocumentTitle from "src/Hooks/useDocumentTitle";
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
+  useDocumentTitle("Dashboard");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -29,27 +26,13 @@ export default function Dashboard() {
     dispatch(sessionRemover());
     navigate("/login");
   };
-  useEffect(() => {
-    setDocumentTitle("Dashboard");
-  }, []);
+
   const drawer = (
     <Box>
       <Toolbar />
       <h1>Logo</h1>
       <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="profile">
-            <ListItemText primary="Profile" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="questions">
-            <ListItemText primary="Survey" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <Divider />
+      <MenuList />
     </Box>
   );
 

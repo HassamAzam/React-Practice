@@ -14,10 +14,4 @@ describe("SurveyComponent", () => {
     const nextButton = screen.getByRole("button", { name: /Next/i });
     expect(nextButton).toBeInTheDocument();
   });
-
-  it("should render Back button after first question", () => {
-    render(<SurveyComponent />);
-    const backButton = screen.getByRole("button", { name: /Next/i });
-    expect(backButton).toBeInTheDocument();
-  });
 });

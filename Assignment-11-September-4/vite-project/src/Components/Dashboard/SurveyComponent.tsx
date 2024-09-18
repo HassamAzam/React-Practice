@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { questionsConfig } from "./questionsConfig";
 import QuestionRenderer from "./QuestionRenderer";
+import SurveyResults from "./SurveyResult";
 
 type Answers = {
   [key: string]: string | string[];
@@ -15,7 +16,7 @@ const SurveyComponent = () => {
     question1: "",
     question2: [] as string[],
     question3: "",
-    question4:""
+    question4: "",
   });
 
   const handleNext = () =>
@@ -82,13 +83,7 @@ const SurveyComponent = () => {
       )}
 
       {currentQuestionIndex === questionsConfig.length && (
-        <Box>
-          <h2>Survey Results</h2>
-          <p>From Pakistan: {answers.question1}</p>
-          <p>Countries to Visit: {(answers.question2 as string[]).join(", ")}</p>
-          <p>Reason to Stay: {answers.question3}</p>
-          <p>Countries you have visited: { answers.question4}</p>
-        </Box>
+        <SurveyResults answers={answers} />
       )}
     </Box>
   );

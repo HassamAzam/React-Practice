@@ -3,13 +3,14 @@ import axios, { AxiosResponse } from "axios";
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { BASE_URL, templateID, serviceID, emailToken } from "src/settings";
+import { templateID, serviceID, emailToken } from "src/settings";
 import Status from "src/Utilities/Enums";
+import { LoginInterface } from "src/Utilities/interfaces";
 
-const checkUserExists = async (email: string): Promise<any> => {
+const checkUserExists = async (email: string): Promise<LoginInterface> => {
   try {
     const response: AxiosResponse = await axios.get(
-      `${BASE_URL}/users?email=${email}`,
+      `users?email=${email}`
     );
     return response.data[0] || null;
   } catch (error) {
@@ -36,12 +37,10 @@ export const sendVerificationEmail = createAsyncThunk(
       await emailjs.send(serviceID, templateID, emailParams, emailToken);
 
       return { message: "Verification email sent successfully" };
-    } catch (error: any) {
-      return rejectWithValue(
-        error.message || "Failed to send verification email",
-      );
+    } catch (error) {
+      return rejectWithValue("Failed to send verification email");
     }
-  },
+  }
 );
 
 const codeSlice = createSlice({

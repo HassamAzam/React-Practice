@@ -3,7 +3,7 @@ enum Status {
   Failed = "failed",
   Loading = "loading",
   Idle = "idle",
-  NotFound=404
+  NotFound =404,
 }
 
 export default Status;

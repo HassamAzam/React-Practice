@@ -1,27 +1,20 @@
 import emailjs from "@emailjs/browser";
-import axios, { AxiosResponse } from "axios";
 
 import { call, put, takeEvery } from "redux-saga/effects";
 
-import { BASE_URL, serviceID, templateID, emailToken } from "src/settings";
+import { serviceID, templateID, emailToken } from "src/settings";
 import {
   sendVerificationEmailFailure,
   sendVerificationEmailRequest,
   sendVerificationEmailSuccess,
 } from "./codeSagaSlice";
+import { checkUserExists } from "./ codeSagaUtility";
+import { SignUpInterface } from "src/Utilities/interfaces";
 
-const checkUserExists = async (email: string): Promise<any> => {
-  try {
-    const response: AxiosResponse = await axios.get(
-      `${BASE_URL}/users?email=${email}`
-    );
-    return response.data[0] || null;
-  } catch (error) {
-    throw new Error("Failed to check user existence");
-  }
-};
-
-const sendEmail = async (email: string, user: any): Promise<void> => {
+const sendEmail = async (
+  email: string,
+  user: SignUpInterface
+): Promise<void> => {
   const emailParams = {
     to_name: email,
     from_name: "SurveyCopsTeam",
@@ -31,16 +24,13 @@ const sendEmail = async (email: string, user: any): Promise<void> => {
   try {
     await emailjs.send(serviceID, templateID, emailParams, emailToken);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 };
 
-function* sendVerificationEmailSaga(action: {
-  type: string;
-  payload: string;
-}): Generator<any, void, any> {
+function* sendVerificationEmailSaga(action: { type: string; payload: string }) {
   try {
-    const user: any = yield call(checkUserExists, action.payload);
+    const user: SignUpInterface = yield call(checkUserExists, action.payload);
 
     if (!user) {
       yield put(sendVerificationEmailFailure("User does not exist"));
@@ -49,11 +39,9 @@ function* sendVerificationEmailSaga(action: {
 
     yield call(sendEmail, action.payload, user);
     yield put(sendVerificationEmailSuccess());
-  } catch (error: any) {
+  } catch (error: unknown) {
     yield put(
-      sendVerificationEmailFailure(
-        error.message || "Failed to send verification email"
-      )
+      sendVerificationEmailFailure("Failed to send verification email")
     );
   }
 }

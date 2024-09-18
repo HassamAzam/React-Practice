@@ -4,19 +4,25 @@ import { Navigate } from "react-router-dom";
 import Status from "src/Utilities/Enums";
 
 interface ComponentForPrivateRoute {
-  toBeAuthenticated: React.FC;
+  component: React.ComponentType; // Expecting a component type
+  route: string;
 }
-const PrivateComponent = (props: ComponentForPrivateRoute) => {
+
+const PrivateComponent = ({
+  component: Component,
+  route,
+}: ComponentForPrivateRoute) => {
   const authStatus = useAppSelector((state) => state.auth.status);
+
   return (
     <>
-      {authStatus == Status.Success ? (
-        <props.toBeAuthenticated />
+      {authStatus === Status.Success ? (
+        <Component /> 
       ) : (
-        <Navigate to="/login" />
+        <Navigate to={route} />
       )}
-      ;
     </>
   );
 };
+
 export default PrivateComponent;

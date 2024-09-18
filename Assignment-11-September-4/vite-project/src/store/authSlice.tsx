@@ -1,12 +1,11 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { BASE_URL } from "../settings";
-import { LoginInterface } from "../Utilities/interfaces";
+import { LoginInterface, SignUpInterface } from "../Utilities/interfaces";
 import Status from "../Utilities/Enums";
 
 interface AuthState {
-  user: any | null;
+  user: SignUpInterface | null;
   status: Status;
   error: string | null;
 }
@@ -21,9 +20,7 @@ export const authenticateUser = createAsyncThunk(
   "auth",
   async (credentials: LoginInterface, thunkAPI) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users?email=${credentials.email}`,
-      );
+      const response = await axios.get(`users?email=${credentials.email}`);
       if (response.data.length) {
         if (response.data[0].password === credentials.password) {
           sessionStorage.setItem("userEmail", JSON.stringify(response.data[0]));
@@ -34,7 +31,7 @@ export const authenticateUser = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue("An error occurred");
     }
-  },
+  }
 );
 
 const authSlice = createSlice({
@@ -53,7 +50,7 @@ const authSlice = createSlice({
         state.status = Status.Loading;
       })
       .addCase(authenticateUser.fulfilled, (state, action) => {
-        state.status = Status.Loading;
+        state.status = Status.Success;
         state.user = action.payload;
         state.error = null;
       })

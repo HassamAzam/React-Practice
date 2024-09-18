@@ -5,11 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import middleware from "src/settings";
-import setDocumentTitle from "src/Utilities/title";
+import  { isMiddleware } from "src/settings";
 import Status from "src/Utilities/Enums";
 import { sendVerificationEmail } from "src/store/loginThroughCodeSlice";
 import { useAppDispatch, useAppSelector } from "src/store/store";
+import useDocumentTitle from "src/Hooks/useDocumentTitle";
 import { sendVerificationEmailRequest } from "src/sagaStore/sagas/codeSagaSlice";
 
 type FormValues = {
@@ -17,6 +17,7 @@ type FormValues = {
 };
 
 const ForgetPassword = () => {
+  useDocumentTitle('Forget Password');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [requestSendFlag, setRequestSendFlag] = useState(false);
@@ -35,12 +36,8 @@ const ForgetPassword = () => {
     }
   }, [status]);
 
-  useEffect(() => {
-    setDocumentTitle("Forget Password");
-  }, []);
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    if (middleware === "thunk") {
+    if (isMiddleware) {
       dispatch(sendVerificationEmail(data.email));
     } else {
       dispatch(sendVerificationEmailRequest({ email: data.email }));

@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import Status from "src//Utilities/Enums";
 import { LoginInterface } from "src/Utilities/interfaces";
+
 interface AuthState {
-  user: LoginInterface |null;
+  user: LoginInterface | null;
   status: Status;
   error: string | null;
 }
@@ -22,7 +24,7 @@ const authSagaSlice = createSlice({
       sessionStorage.removeItem("userEmail");
       state.status = Status.Idle;
     },
-    loginSuccess(state, action: PayloadAction<any>) {
+    loginSuccess(state, action: PayloadAction<LoginInterface>) {
       state.user = action.payload;
       state.status = Status.Success;
       sessionStorage.setItem("userEmail", action.payload.email); // Store user email

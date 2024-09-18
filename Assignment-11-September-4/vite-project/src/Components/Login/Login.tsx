@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 
 import { authenticateUser } from "src/store/authSlice";
 import { loginRequest } from "src/sagaStore/sagas/authSagaSlice";
-import middleware from "src/settings";
+import { isMiddleware } from "src/settings";
 import { sessionSetter } from "src/store/userSlice";
-import setDocumentTitle from "src/Utilities/title";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import useDocumentTitle from "src/Hooks/useDocumentTitle";
 import Status from "src/Utilities/Enums";
 
 type FormValues = {
@@ -20,10 +20,12 @@ type FormValues = {
 };
 
 const Login = () => {
+  useDocumentTitle("Login");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status, user } = useAppSelector((state) => state.auth);
   const { register, handleSubmit } = useForm<FormValues>();
+
   useEffect(() => {
     if (status === Status.Success) {
       toast.success("Logged In");
@@ -34,12 +36,8 @@ const Login = () => {
     }
   }, [status, user]);
 
-  useEffect(() => {
-    setDocumentTitle("Login");
-  }, []);
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    if (middleware == "thunk") {
+    if (isMiddleware) {
       dispatch(authenticateUser(data));
     } else {
       dispatch(loginRequest(data));
@@ -100,4 +98,6 @@ const Login = () => {
     </Box>
   );
 };
+
 export default Login;
+

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { BASE_URL } from "src/settings";
 import { SignUpInterface } from "src/Utilities/interfaces";
 import Status from "src/Utilities/Enums";
 
@@ -18,14 +17,14 @@ export const signUp = createAsyncThunk(
   "user/signUp",
   async (user: SignUpInterface, thunkAPI) => {
     try {
-      const response = await axios.get(`${BASE_URL}/users?email=${user.email}`);
+      const response = await axios.get(`users?email=${user.email}`);
       if (response.data.length > 0) {
       }
       return true;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === Status.NotFound) {
-          await axios.post(`${BASE_URL}/users`, user);
+          await axios.post(`/users`, user);
           return thunkAPI.fulfillWithValue("Success");
         } else {
           return thunkAPI.rejectWithValue("An error occurred during sign-up");

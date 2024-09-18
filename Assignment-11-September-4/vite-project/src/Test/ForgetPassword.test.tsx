@@ -2,14 +2,12 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
+import "@testing-library/jest-dom";
 
 import { describe, it, expect } from "vitest";
 
 import ForgetPassword from "../Components/Login/ForgetPassword";
-import codeReducer from "src/store/loginThroughCodeSlice"; 
-
-import "@testing-library/jest-dom";
-
+import codeReducer from "src/store/loginThroughCodeSlice";
 
 const store = configureStore({
   reducer: {
@@ -28,9 +26,9 @@ describe("ForgetPassword Component", () => {
     );
     const emailInput = screen.getByLabelText(/Email/i);
     expect(emailInput).toBeInTheDocument();
-    expect(emailInput).toHaveAttribute('type', 'email'); // Check input type
+    expect(emailInput).toHaveAttribute("type", "email");
 
-    const submitButton = screen.getByRole('button', { name: /Send Details/i });
+    const submitButton = screen.getByRole("button", { name: /Send Details/i });
     expect(submitButton).toBeInTheDocument();
   });
 });

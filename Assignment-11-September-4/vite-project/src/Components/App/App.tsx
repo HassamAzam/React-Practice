@@ -4,24 +4,16 @@ import { Store } from "redux";
 import { lazy, Suspense } from "react";
 
 import "./App.css";
-
-import middleware from "src/settings";
-import sagaStore from "src/sagaStore/sagaStore";
-import store from "src/store/store";
+import configureStore from "src/configStore";
+import DetailsForm from "src/Components/Dashboard/DetailsForm";
+import ForgetPassword from "src/Components/Login/ForgetPassword";
+import Login from "src/Components/Login/Login";
+import SignUp from "src/Components/SignUp/SignUp";
+import SurveyComponent from "src/Components/Dashboard/SurveyComponent";
 
 const Dashboard = lazy(() => import("src/Components/Dashboard/Dashboard"));
-const DetailsForm = lazy(() => import("src/Components/Dashboard/DetailsForm"));
-const SurveyComponent = lazy(
-  () => import("src/Components/Dashboard/SurveyComponent"),
-);
-const ForgetPassword = lazy(
-  () => import("src/Components/Login/ForgetPassword"),
-);
-const Login = lazy(() => import("src/Components/Login/Login"));
 const PrivateComponent = lazy(() => import("src/Components/PrivateComponent"));
-const SignUp = lazy(() => import("src/Components/SignUp/SignUp"));
-
-const selectedStore: Store = middleware === "thunk" ? store : sagaStore;
+const selectedStore: Store = configureStore();
 
 const App = () => {
   return (
@@ -34,7 +26,7 @@ const App = () => {
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route
             path="/dashboard"
-            element={<PrivateComponent toBeAuthenticated={Dashboard} />}
+            element={<PrivateComponent route="/login" component={Dashboard} />}
           >
             <Route path="profile" element={<DetailsForm />} />
             <Route path="questions" element={<SurveyComponent />} />

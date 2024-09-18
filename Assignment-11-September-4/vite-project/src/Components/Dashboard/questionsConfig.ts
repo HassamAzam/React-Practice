@@ -40,12 +40,12 @@ export const questionsConfig: QuestionConfig[] = [
   },
   {
     type: 'checkbox',
-    question: 'Select the countries you have visited:',
+    question: 'Select the countries you want to visit:',
     options: [
-      { value: 'USA', label: 'USA' },
-      { value: 'Canada', label: 'Canada' },
-      { value: 'France', label: 'France' },
-      { value: 'Belgium', label: 'Belgium' },
+      { value: 'Jamaica', label: 'Jamaica' },
+      { value: 'Russia', label: 'Russia' },
+      { value: 'Malaysia', label: 'Malaysia' },
+      { value: 'China', label: 'China' },
     ],
     key: 'question4',
   },

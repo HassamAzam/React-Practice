@@ -2,14 +2,13 @@ import axios, { AxiosResponse } from "axios";
 
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import { BASE_URL } from "src/settings";
 import { LoginInterface } from "src/Utilities/interfaces";
 import { loginFailure, loginRequest, loginSuccess } from "./authSagaSlice";
 
 const authenticate = async (
   credentials: LoginInterface
 ): Promise<AxiosResponse> => {
-  return await axios.get(`${BASE_URL}/users?email=${credentials.email}`);
+  return await axios.get(`users?email=${credentials.email}`);
 };
 
 function* loginSaga({ payload }: { type: string; payload: LoginInterface }) {
@@ -22,7 +21,8 @@ function* loginSaga({ payload }: { type: string; payload: LoginInterface }) {
     } else {
       yield put(loginFailure());
     }
-  } catch (error: any) {
+  }
+  catch (error) {
     yield put(loginFailure());
   }
 }

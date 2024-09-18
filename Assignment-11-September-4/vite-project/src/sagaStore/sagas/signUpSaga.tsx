@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { BASE_URL } from "src/settings";
+
 import { SignUpInterface } from "src/Utilities/interfaces";
 import { signUpFailure, signUpRequest, signUpSuccess } from "./signUpSagaSlice";
 
@@ -8,7 +8,7 @@ const checkIfExist = async (
   user: SignUpInterface,
 ): Promise<AxiosResponse | null> => {
   try {
-    return await axios.get(`${BASE_URL}/users?email=${user.email}`);
+    return await axios.get(`?email=${user.email}`);
   } catch (error) {
     console.error("Error checking if user exists:", error);
     return null;
@@ -17,7 +17,7 @@ const checkIfExist = async (
 
 const signUp = async (user: SignUpInterface): Promise<AxiosResponse | null> => {
   try {
-    return await axios.post(`${BASE_URL}/users`, user);
+    return await axios.post(`/users`, user);
   } catch (error) {
     console.error("Error signing up user:", error);
     return null;
@@ -44,7 +44,7 @@ function* signUpSaga(action: { type: string; payload: SignUpInterface }) {
         yield put(signUpFailure({ message: "Sign-up failed" }));
       }
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in signUpSaga:", error);
     yield put(signUpFailure({ message: "An error occurred during sign up" }));
   }

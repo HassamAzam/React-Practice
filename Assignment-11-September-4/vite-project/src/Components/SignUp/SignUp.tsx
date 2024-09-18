@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-
 import {
   Box,
   Button,
@@ -15,21 +14,22 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
-import middleware from "src/settings";
-import setDocumentTitle from "src/Utilities/title";
+import { isMiddleware } from "src/settings";
 import Status from "src/Utilities/Enums";
 import { SignUpInterface } from "src/Utilities/interfaces";
 import { resetState, signUp } from "src/store/signUpSlice";
 import { useAppDispatch, useAppSelector } from "src/store/store";
+import useDocumentTitle from "src/Hooks/useDocumentTitle";
 import { signUpRequest } from "src/sagaStore/sagas/signUpSagaSlice";
 
+const genderOptions = ["Male", "Female", "Other"];
+
 const SignUp = () => {
+  useDocumentTitle("Sign Up");
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<SignUpInterface>();
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.signUp);
-
-  const genderOptions = ["Male", "Female", "Other"];
 
   useEffect(() => {
     if (status === Status.Success) {
@@ -44,12 +44,8 @@ const SignUp = () => {
     };
   }, [status]);
 
-  useEffect(() => {
-    setDocumentTitle("Sign Up");
-  }, []);
-
   const onSubmit: SubmitHandler<SignUpInterface> = async (data) => {
-    if (middleware == "thunk") {
+    if (isMiddleware) {
       await dispatch(signUp(data)).unwrap();
     } else {
       dispatch(signUpRequest(data));
