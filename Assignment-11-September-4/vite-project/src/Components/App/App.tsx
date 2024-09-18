@@ -18,7 +18,7 @@ const selectedStore: Store = configureStore();
 const App = () => {
   return (
     <Provider store={selectedStore}>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading the id...</div>}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
