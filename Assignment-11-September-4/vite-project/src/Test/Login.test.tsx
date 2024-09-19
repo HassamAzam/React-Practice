@@ -1,24 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-
+import configureMockStore from 'redux-mock-store';
 import { describe, it, expect, vi } from 'vitest';
-
 import Login from 'src/Components/Login/Login';
-import authReducer from 'src/store/authSlice';
 import Status from 'src/Utilities/Enums';
 import '@testing-library/jest-dom';
 
-const store = configureStore({
-  reducer: {
-    auth: authReducer,
+const mockStore = configureMockStore();
+const initialState = {
+  auth: {
+    user: null,
+    status: Status.Idle,
   },
-});
+};
 
 describe('Login Component', () => {
   it("should call navigate when 'Forget Password' button is clicked", () => {
     const navigate = vi.fn();
+    const store = mockStore(initialState);
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -35,6 +35,7 @@ describe('Login Component', () => {
 
   it("should call navigate when 'SignUp' button is clicked", () => {
     const navigate = vi.fn();
+    const store = mockStore(initialState);
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -50,6 +51,12 @@ describe('Login Component', () => {
   });
 
   it('should show success toast message on successful login', () => {
+    const store = mockStore({
+      auth: {
+        user: { name: 'Test User' },
+        status: Status.Success,
+      },
+    });
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -57,21 +64,19 @@ describe('Login Component', () => {
         </MemoryRouter>
       </Provider>,
     );
-    const { user } = store.getState().auth;
-    store.dispatch({
-      type: 'auth/setStatus',
-      payload: Status.Success,
-    });
-    store.dispatch({
-      type: 'auth/setUser',
-      payload: { ...user },
-    });
+
     setTimeout(() => {
-      expect(expect(screen.getByText(/Logged In/i)).toBeInTheDocument());
+      expect(screen.getByText(/Logged In/i)).toBeInTheDocument();
     }, 3000);
   });
 
   it('should show error toast message on failed login', () => {
+    const store = mockStore({
+      auth: {
+        user: null,
+        status: Status.Failed,
+      },
+    });
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -79,10 +84,7 @@ describe('Login Component', () => {
         </MemoryRouter>
       </Provider>,
     );
-    store.dispatch({
-      type: 'auth/setStatus',
-      payload: Status.Failed,
-    });
+
     setTimeout(() => {
       expect(
         screen.getByText(/Email or Password is wrong/i),

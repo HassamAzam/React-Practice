@@ -27,26 +27,18 @@ const ForgetPassword = () => {
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  useEffect(() => {
-    if (status === Status.Success) {
-      toast.success('Details have been sent to your email');
-      setRequestSendFlag(true);
-      navigate('/login');
-    } else if (status === Status.Failed) {
-      toast.error('Failed to send details to your email');
-    }
-  }, [status]);
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (isMiddleware) {
       dispatch(sendVerificationEmail(data.email));
     } else {
       dispatch(sendVerificationEmailRequest({ email: data.email }));
+      setRequestSendFlag(false);
     }
-    // Disable the button and hide it after one click
-    if (buttonRef.current) {
-      buttonRef.current.disabled = true;
-      setRequestSendFlag(true);
+    if (status === Status.Success) {
+      toast.success('Details have been sent to your email');
+      navigate('/login');
+    } else if (status === Status.Failed) {
+      toast.error('Failed to send details to your email');
     }
   };
 
@@ -72,16 +64,15 @@ const ForgetPassword = () => {
               required
             />
           </FormControl>
-          {!requestSendFlag && (
-            <Button
-              ref={buttonRef}
-              type="submit"
-              variant="contained"
-              color="primary"
-            >
-              Send Details
-            </Button>
-          )}
+          <Button
+            ref={buttonRef}
+            disabled={requestSendFlag}
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Send Details
+          </Button>
         </Box>
       </Box>
     </>

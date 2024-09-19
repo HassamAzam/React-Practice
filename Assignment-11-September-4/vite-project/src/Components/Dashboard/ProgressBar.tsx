@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { LinearProgress, Button, Box } from "@mui/material";
+import { LinearProgress, Button, Box } from '@mui/material';
 
 const ProgressBar = () => {
   const [progress, setProgress] = useState(0);
   const handleClick = () => {
-    setProgress((progress) => {
-      progress = progress + 10;
-      return progress;
-    });
+    setProgress((progress) => progress + 10);
   };
 
   return (

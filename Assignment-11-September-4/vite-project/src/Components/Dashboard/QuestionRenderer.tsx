@@ -6,14 +6,15 @@ import {
   FormGroup,
   Checkbox,
   TextField,
-} from "@mui/material";
+  Typography,
+} from '@mui/material';
 
 interface Option {
   value: string;
   label: string;
 }
 
-type QuestionType = "radio" | "checkbox" | "input";
+type QuestionType = 'radio' | 'checkbox' | 'input';
 
 interface QuestionConfig {
   type: QuestionType;
@@ -34,7 +35,7 @@ const QuestionRenderer = ({
   setAnswer,
 }: QuestionRendererProps) => {
   switch (questionConfig.type) {
-    case "radio":
+    case 'radio':
       return (
         <FormControl component="fieldset">
           <RadioGroup
@@ -54,7 +55,7 @@ const QuestionRenderer = ({
           </RadioGroup>
         </FormControl>
       );
-    case "checkbox":
+    case 'checkbox':
       return (
         <FormControl component="fieldset">
           <FormGroup>
@@ -81,7 +82,7 @@ const QuestionRenderer = ({
           </FormGroup>
         </FormControl>
       );
-    case "input":
+    case 'input':
       return (
         <TextField
           multiline
@@ -92,7 +93,11 @@ const QuestionRenderer = ({
         />
       );
     default:
-      return null;
+      return (
+        <>
+          <Typography>No Questions to be displayed</Typography>
+        </>
+      );
   }
 };
 
