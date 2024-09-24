@@ -1,12 +1,17 @@
 export default function DeleteIcon() {
   return (
-    <div>
+    <div style={{
+     
+      height: '30px',
+      width:'30px'
+    }}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="black"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         className="size-6"
+        color="black"
       >
         <path
           strokeLinecap="round"

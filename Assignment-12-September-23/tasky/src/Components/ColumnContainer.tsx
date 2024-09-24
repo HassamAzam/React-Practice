@@ -1,5 +1,7 @@
-import { useSortable } from "@dnd-kit/sortable";
+import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useRef, useState } from "react";
+
 import {
   Box,
   Typography,
@@ -10,19 +12,33 @@ import {
 } from "@mui/material";
 
 import DeleteIcon from "../Icons/DeleteIcon";
-import { ColumnType } from "../types";
-import { useEffect, useRef, useState } from "react";
+import { ColumnType, TaskType } from "../types";
+import PlusIcon from "../Icons/PlusIcon";
+import Task from "./Task";
 
 interface Props {
   column: ColumnType;
+  tasks: TaskType[]; // Receive tasks as props
+  createTask: (columnId: string) => void;
+  deleteTask: (id: string) => void;
+  updateTask: (id: string, content: string) => void;
   delColumn: (id: string) => void;
   updateColumnName: (title: string, id: string) => void;
 }
 
-const ColumnContainer = (props: Props) => {
+const ColumnContainer = ({
+  column,
+  tasks,
+  createTask,
+  deleteTask,
+  updateTask,
+  delColumn,
+  updateColumnName,
+}: Props) => {
+  const taskId = tasks.map((task) => task.id);
   const [editMode, setEditMode] = useState(false);
-  const columnName = useRef<string>(props.column.title);
-  const { column, delColumn } = props;
+  const [isHovered, setIsHovered] = useState(false); // To track if a task is hovering over
+  const columnName = useRef<string>(column.title);
 
   const {
     setNodeRef,
@@ -40,14 +56,9 @@ const ColumnContainer = (props: Props) => {
   });
 
   const handleColumnNameUpdate = () => {
-    console.log("updateFunctionCalled");
-    props.updateColumnName(columnName.current, column.id);
+    updateColumnName(columnName.current, column.id);
     setEditMode(false);
   };
-
-  useEffect(() => {
-    console.log("Edit mode changed to: ", editMode);
-  }, [editMode]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -58,8 +69,16 @@ const ColumnContainer = (props: Props) => {
     setEditMode(true);
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     columnName.current = e.target.value;
+  };
+
+  const handleDragOver = () => {
+    setIsHovered(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsHovered(false);
   };
 
   if (isDragging) {
@@ -77,7 +96,6 @@ const ColumnContainer = (props: Props) => {
       />
     );
   }
-  console.log("Component");
 
   return (
     <Card
@@ -85,12 +103,15 @@ const ColumnContainer = (props: Props) => {
       style={style}
       sx={{
         width: 350,
-        height: 500,
+        height: isHovered ? 550 : 500, // Expand when hovered
         display: "flex",
         flexDirection: "column",
         bgcolor: "columnBackgroundColor",
         borderRadius: 2,
+        border: isHovered ? "2px dashed #08b6e5" : "none", // Add a visual cue when hovering
       }}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
     >
       <Box
         onClick={handleColumnEditMode}
@@ -102,25 +123,14 @@ const ColumnContainer = (props: Props) => {
         p={2}
         sx={{ bgcolor: "#08b6e5", cursor: "grab" }}
       >
-        <Box
-          component="span"
-          sx={{
-            bgcolor: "white",
-            px: 1,
-            py: 0.5,
-            borderRadius: 1,
-          }}
-        ></Box>
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           {!editMode && column.title}
           {editMode && (
-            <>
-              <TextField
-                defaultValue={column.title}
-                autoFocus
-                onChange={handleChange}
-              />
-            </>
+            <TextField
+              defaultValue={column.title}
+              autoFocus
+              onChange={handleChange}
+            />
           )}
         </Typography>
         <IconButton onClick={() => delColumn(column.id)}>
@@ -132,8 +142,22 @@ const ColumnContainer = (props: Props) => {
           Change Column Name
         </Button>
       )}
-      <Box flexGrow={1}>Content</Box>
-      <Box>Footer</Box>
+
+      <Box sx={{ overflow: "scroll", flexGrow: 1 }}>
+        <SortableContext items={taskId}>
+          {tasks.map((task) => (
+            <Task
+              key={task.id}
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
+          ))}
+        </SortableContext>
+      </Box>
+      <Button onClick={() => createTask(column.id)} startIcon={<PlusIcon />}>
+        Add Task
+      </Button>
     </Card>
   );
 };
