@@ -1,0 +1,3 @@
+export const supabaseUrl = "https://zstgnolsemcypxezlian.supabase.co"; 
+export const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzdGdub2xzZW1jeXB4ZXpsaWFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjcyNjMwMDQsImV4cCI6MjA0MjgzOTAwNH0.JjTk4sWDH6nRfjfF7NVvtzgtYJjCxGLJuBFNhqdsnKA"; 
