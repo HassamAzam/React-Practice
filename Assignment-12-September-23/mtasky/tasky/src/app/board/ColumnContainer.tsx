@@ -75,7 +75,7 @@ function ColumnContainer(props: ColumnProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className="w-[350px] max-h-[500px] rounded-md h-[500px] flex flex-col"
+      className="w-[350px] max-h-[900px] rounded-md h-[600px] flex flex-col"
     >
       <div
         {...attributes}

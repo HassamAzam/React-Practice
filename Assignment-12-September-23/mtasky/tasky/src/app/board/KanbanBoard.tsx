@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect } from "react";
 import { redirect } from "next/navigation";
 import { v4 } from "uuid";
 import { createPortal } from "react-dom";
-import Link from "next/link";
 import {
   DndContext,
   DragEndEvent,
@@ -16,7 +15,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import { Button } from "@mui/material";
 
 import {
   addCard,
@@ -33,18 +31,23 @@ import PlusIcon from "@/Icons/PlusIcon";
 import { ColumnType, TaskType } from "@/types";
 import ColumnContainer from "./ColumnContainer";
 import TaskCard from "./Card";
+import React from "react";
+import Navbar from "./Navbar";
+import useDocumentTitle from "../titleHook";
 
 const KanbanBoard = () => {
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [tasks, setTasks] = useState<TaskType[]>([]);
-  let loggedInUser: string | null = null;
-  if (typeof window !== "undefined") {
-    loggedInUser = sessionStorage.getItem("email");
-    if (loggedInUser == null) {
+
+  useEffect(() => {
+    const email = sessionStorage.getItem("email");
+    if (email) {
+      setLoggedInUser(email);
+    } else {
       redirect("/login");
     }
-  }
- 
-
+  }, []);
+  useDocumentTitle("Board")
   const createTask = async (columnId: string) => {
     if (loggedInUser) {
       const newTask: TaskType = {
@@ -159,6 +162,10 @@ const KanbanBoard = () => {
 
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
+    const newTask = active.data.current?.task;
+    updateTask(newTask.id, newTask.content, newTask.columnId);
+
     setActiveTask(null);
     setActiveColumn(null);
 
@@ -237,78 +244,73 @@ const KanbanBoard = () => {
   };
 
   return (
-    <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px] bg-[#8f83d8]">
-      <DndContext
-        onDragOver={onDragOver}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        sensors={sensors}
-      >
-        <div className="m-auto flex gap-4">
-          <div>
-            <SortableContext items={columnsId}>
-              <div className="flex gap-4">
-                {columns.map((col) => (
+    <>
+      <Navbar loggedInUser={loggedInUser} handleLogout={handleLogout} />
+      <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px] bg-[#000000]">
+        <DndContext
+          onDragOver={onDragOver}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          sensors={sensors}
+        >
+          <div className="m-auto flex gap-4">
+            <div>
+              <SortableContext items={columnsId}>
+                <div className="flex gap-4">
+                  {columns.map((col) => (
+                    <ColumnContainer
+                      updateTask={updateTask}
+                      key={col.id}
+                      updateColumn={updateColumn}
+                      column={col}
+                      deleteColumn={deleteColumn}
+                      createTask={createTask}
+                      deleteTask={deleteTask}
+                      tasks={tasks.filter((task) => task.columnId === col.id)}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </div>
+            <button
+              title="Click  to add new columns"
+              onClick={createNewColumn}
+              className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg border-2 p-4 ring-rose-500 hover:ring-2 flex gap-2"
+              style={{ backgroundColor: "#51074a", borderColor: "#0D1117" }}
+            >
+              <PlusIcon />
+              Add Columns
+            </button>
+          </div>
+          {typeof window !== "undefined" &&
+            createPortal(
+              <DragOverlay>
+                {activeColumn && (
                   <ColumnContainer
                     updateTask={updateTask}
-                    key={col.id}
                     updateColumn={updateColumn}
-                    column={col}
                     deleteColumn={deleteColumn}
+                    column={activeColumn}
                     createTask={createTask}
                     deleteTask={deleteTask}
-                    tasks={tasks.filter((task) => task.columnId === col.id)}
+                    tasks={tasks.filter(
+                      (task) => task.columnId === activeColumn.id
+                    )}
                   />
-                ))}
-              </div>
-            </SortableContext>
-          </div>
-          <button
-            title="Click  to add new columns"
-            onClick={createNewColumn}
-            className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg border-2 p-4 ring-rose-500 hover:ring-2 flex gap-2"
-            style={{ backgroundColor: "#51074a", borderColor: "#0D1117" }}
-          >
-            <PlusIcon />
-            Add Columns
-          </button>
-        </div>
-        {typeof window !== "undefined" &&
-          createPortal(
-            <DragOverlay>
-              {activeColumn && (
-                <ColumnContainer
-                  updateTask={updateTask}
-                  updateColumn={updateColumn}
-                  deleteColumn={deleteColumn}
-                  column={activeColumn}
-                  createTask={createTask}
-                  deleteTask={deleteTask}
-                  tasks={tasks.filter(
-                    (task) => task.columnId === activeColumn.id
-                  )}
-                />
-              )}
-              {activeTask && (
-                <TaskCard
-                  task={activeTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                />
-              )}
-            </DragOverlay>,
-            document.body
-          )}
-      </DndContext>
-
-      <Button
-        onClick={handleLogout}
-        variant="contained"
-        title="Click to logout"
-      >
-        <Link href="/login">Logout</Link>
-      </Button>
-    </div>
+                )}
+                {activeTask && (
+                  <TaskCard
+                    task={activeTask}
+                    deleteTask={deleteTask}
+                    updateTask={updateTask}
+                  />
+                )}
+              </DragOverlay>,
+              document.body
+            )}
+        </DndContext>
+      </div>
+    </>
   );
 };
 

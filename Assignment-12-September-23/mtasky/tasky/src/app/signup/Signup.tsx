@@ -5,6 +5,7 @@ import { TextField, Button, Paper, Typography, Box, Grid } from "@mui/material";
 import Link from "next/link";
 
 import { insertUser } from "@/middleware/middleware";
+import useDocumentTitle from "../titleHook";
 
 interface SignUpForm {
   name: string;
@@ -25,6 +26,7 @@ const SignupPage = () => {
     confirmPassword: "",
   });
 
+  useDocumentTitle("SignUp")
   const validateForm = () => {
     let valid = true;
     const newErrors = {

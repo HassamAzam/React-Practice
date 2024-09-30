@@ -6,6 +6,7 @@ import { TextField, Button, Paper, Typography, Box, Grid } from "@mui/material";
 import { authenticateUser } from "@/middleware/middleware";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import useDocumentTitle from "../titleHook";
 
 interface IFormInput {
   email: string | undefined;
@@ -14,9 +15,12 @@ interface IFormInput {
 
 const LoginPage = () => {
   const router = useRouter();
+
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<IFormInput>({ email: "", password: "" });
+
+  useDocumentTitle('Login')
 
   const validateForm = () => {
     let valid = true;
