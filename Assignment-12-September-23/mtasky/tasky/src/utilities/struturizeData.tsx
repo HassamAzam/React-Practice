@@ -13,6 +13,7 @@ export const transformDbDataTask = (dbData: any[]): TaskType[] => {
     columnId: item.column_id,
     content: item.description,
     email: item.email,
+    time: item.created_at
   }));
 };
 

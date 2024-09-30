@@ -2,9 +2,9 @@
 
 import React, { useRef } from "react";
 import { TextField, Button, Paper, Typography, Box, Grid } from "@mui/material";
-import { insertUser } from "@/middleware/middleware";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+
+import { insertUser } from "@/middleware/middleware";
 
 interface SignUpForm {
   name: string;
@@ -13,9 +13,7 @@ interface SignUpForm {
   confirmPassword: string;
 }
 
-const SignupPage: React.FC = () => {
-  const router = useRouter();
-
+const SignupPage = () => {
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);

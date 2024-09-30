@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import PlusIcon from "@/Icons/PlusIcon";
-import { ColumnType, TaskType } from "@/types";
 import { redirect } from "next/navigation";
 import { v4 } from "uuid";
-import ColumnContainer from "./ColumnContainer";
+import { createPortal } from "react-dom";
+import Link from "next/link";
 import {
   DndContext,
   DragEndEvent,
@@ -17,8 +16,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import TaskCard from "./Card";
-import { createPortal } from "react-dom";
+import { Button } from "@mui/material";
+
 import {
   addCard,
   deleteColumnFromDb,
@@ -26,11 +25,14 @@ import {
   getColumns,
   sendColumn,
   updateCardFromDb,
+  updateColumnNameFromDb,
 } from "@/middleware/middleware";
-import { updateColumnNameFromDb } from "@/middleware/middleware";
-import { Button } from "@mui/material";
-import Link from "next/link";
-import { getFormattedDate } from "@/middleware/utilties";
+
+import { getFormattedDate } from "@/utilities/utilties";
+import PlusIcon from "@/Icons/PlusIcon";
+import { ColumnType, TaskType } from "@/types";
+import ColumnContainer from "./ColumnContainer";
+import TaskCard from "./Card";
 
 const KanbanBoard = () => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
@@ -41,6 +43,8 @@ const KanbanBoard = () => {
       redirect("/login");
     }
   }
+ 
+
   const createTask = async (columnId: string) => {
     if (loggedInUser) {
       const newTask: TaskType = {
@@ -48,7 +52,7 @@ const KanbanBoard = () => {
         columnId,
         content: `Task ${tasks.length + 1}`,
         email: loggedInUser,
-        time:Date()
+        time: Date(),
       };
       await addCard(
         newTask.id,
@@ -84,7 +88,6 @@ const KanbanBoard = () => {
           }
         }
       };
-
       fetchColumns();
     }
   }, [loggedInUser]);
@@ -108,7 +111,6 @@ const KanbanBoard = () => {
   const deleteColumn = async (id: string) => {
     await deleteColumnFromDb(id);
     const filteredColumn = columns.filter((col) => col.id !== id);
-
     setColumns(filteredColumn);
     const newTasks = tasks.filter((t) => t.columnId !== id);
     setTasks(newTasks);
@@ -123,11 +125,14 @@ const KanbanBoard = () => {
   };
 
   const updateTask = async (id: string, content: string, columnId: string) => {
-    console.log("UpdateTask Called")
     if (loggedInUser) {
-      console.log("Inside LoggedInUser")
-      console.log("Content",content)
-      await updateCardFromDb(id, content, loggedInUser, columnId,getFormattedDate());
+      await updateCardFromDb(
+        id,
+        content,
+        loggedInUser,
+        columnId,
+        getFormattedDate()
+      );
     }
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -153,21 +158,14 @@ const KanbanBoard = () => {
   };
 
   const onDragEnd = (event: DragEndEvent) => {
-    console.log("Inside Drag");
-    console.log(event);
     const { active, over } = event;
-    console.log(active.id === over?.id);
-
     setActiveTask(null);
     setActiveColumn(null);
 
     if (!over) return;
-
     if (active.data.current?.type === "Column") {
       const activeColumnId = active.id;
       const overColumnId = over.id;
-      console.log("Columns i s running");
-
       if (activeColumnId === overColumnId) return;
 
       setColumns((columns) => {
@@ -184,19 +182,15 @@ const KanbanBoard = () => {
         return columns;
       });
     }
-    console.log("After  Column");
     if (active.data.current?.type === "Task") {
       const activeTaskId = active.id;
       const overTaskId = over.id;
-      console.log("tasjk is running");
       if (activeTaskId === overTaskId) {
         return;
       }
-      console.log("Afterwards");
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeTaskId);
         const overIndex = tasks.findIndex((t) => t.id === overTaskId);
-
         if (tasks[activeIndex]?.columnId && tasks[overIndex]?.columnId) {
           tasks[activeIndex].columnId = tasks[overIndex].columnId;
         }
@@ -232,10 +226,8 @@ const KanbanBoard = () => {
 
     const isOverAColumn = over.data.current?.type === "Column";
     if (isActiveTask && isOverAColumn) {
-      console.log("Insdide Active Task andd over task conditions");
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        console.log(over.id);
         if (over.id) {
           tasks[activeIndex].columnId = overId.toString();
         }
@@ -272,6 +264,7 @@ const KanbanBoard = () => {
             </SortableContext>
           </div>
           <button
+            title="Click  to add new columns"
             onClick={createNewColumn}
             className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg border-2 p-4 ring-rose-500 hover:ring-2 flex gap-2"
             style={{ backgroundColor: "#51074a", borderColor: "#0D1117" }}
@@ -308,7 +301,11 @@ const KanbanBoard = () => {
           )}
       </DndContext>
 
-      <Button onClick={handleLogout} variant="contained">
+      <Button
+        onClick={handleLogout}
+        variant="contained"
+        title="Click to logout"
+      >
         <Link href="/login">Logout</Link>
       </Button>
     </div>

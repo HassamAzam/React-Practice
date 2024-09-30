@@ -1,22 +1,19 @@
-'use client'
+"use client";
 
 import { useRef, useState } from "react";
-import DeleteIcon from "@/Icons/DeleteIcon";
-import { TaskType } from "@/types";
+import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
 import { Modal, Button, TextareaAutosize } from "@mui/material";
-import React from "react";
 
-interface Props {
-  task: TaskType;
-  deleteTask: (id: string) => void;
-  updateTask: (id: string, content: string, columnId: string) => void;
-}
+import { CardProps } from "./interface";
+import DeleteIcon from "@/Icons/DeleteIcon";
+import { formatTimestamp } from "@/utilities/utilties";
 
-function TaskCard({ task, deleteTask, updateTask }: Props) {
+function TaskCard({ task, deleteTask, updateTask }: CardProps) {
   const [modalOpen, setModalOpen] = useState(false);
-  const taskContent = useRef('');
+  const taskContent = useRef("");
 
   const {
     setNodeRef,
@@ -38,7 +35,6 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
 
   const handleSave = () => {
     task.content = taskContent.current;
-    console.log()
     updateTask(task.id, task.content, task.columnId);
     setModalOpen(false);
   };
@@ -74,8 +70,6 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
           {task.content}
         </p>
       </div>
-
-      {/* Modal for editing and deleting */}
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col items-center justify-center h-screen bg-gray-800 bg-opacity-80">
           <div className="bg-[#0D1117] p-5 rounded-lg text-white w-[90%] max-w-[400px]">
@@ -88,12 +82,20 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
               defaultValue={task.content}
             />
             <p className="mt-2 text-gray-400">Last Updated By: {task.email}</p>
-            <p className="mt-2 text-gray-400">Last Updated on: {task.time}</p>
+            <p className="mt-2 text-gray-400">
+              Last Updated on: {formatTimestamp(task.time)}
+            </p>
             <div className="flex justify-end mt-4 gap-2">
-              <Button variant="contained" color="primary" onClick={handleSave}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSave}
+                title="Click to save changes"
+              >
                 Save
               </Button>
               <Button
+                title="Click to delete the Icon"
                 variant="contained"
                 color="secondary"
                 onClick={() => deleteTask(task.id)}
@@ -101,6 +103,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
                 <DeleteIcon /> Delete
               </Button>
               <Button
+                title="Click To close without saving"
                 variant="outlined"
                 color="inherit"
                 onClick={handleCloseModal}

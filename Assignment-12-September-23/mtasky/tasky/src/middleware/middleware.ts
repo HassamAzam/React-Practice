@@ -1,7 +1,8 @@
 "use server";
-import { v4 as uuidv4 } from "uuid";
 import { createClient } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from "uuid";
 import { redirect } from "next/navigation";
+
 import { supabaseKey, supabaseUrl } from "@/settings/settings";
 import {
   transformDbDataColumn,
@@ -14,7 +15,6 @@ export async function fetchUsers() {
   const { data: users, error } = await supabase.from("users").select("*");
 
   if (error) {
-    console.error("Error fetchisng users:", error);
     return;
   }
 
@@ -116,9 +116,6 @@ export const updateCardFromDb = async (
   
 cardId: string, cardDescription: string, email:string,columndId: string,date:string 
 ) => {
-  console.log("Inside DB functiona")
-  console.log("Email", email)
-  console.log("Id",cardId)
   const { data: cards, error } = await supabase
     .from("cards")
     .update({
@@ -129,7 +126,6 @@ cardId: string, cardDescription: string, email:string,columndId: string,date:str
     })
     .eq("id", cardId)
     .select();
-  console.log(cards,error)
 };
 export const updateColumnNameFromDb = async (
   columnId: string,

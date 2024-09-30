@@ -1,34 +1,25 @@
-'use client'
+"use client";
 
-import { ColumnType, TaskType } from "@/types";
-import DeleteIcon from "@/Icons/DeleteIcon";
+import { useMemo } from "react";
+
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useMemo, useState } from "react";
+
+import DeleteIcon from "@/Icons/DeleteIcon";
+import { ColumnProps } from "./interface";
 import PlusIcon from "@/Icons/PlusIcon";
 import TaskCard from "./Card";
-interface Props {
-  column: ColumnType;
-  deleteColumn: (id: string) => void;
-  updateColumn: (id: string, title: string) => void;
-  createTask: (columnId: string) => void;
-  tasks: TaskType[];
-  deleteTask: (id: string) => void;
-    updateTask: (id: string, content: string, columdId: string) => void;
- 
-}
 
 import { useRef } from "react";
 
-function ColumnContainer(props: Props) {
+function ColumnContainer(props: ColumnProps) {
   const {
     column,
     deleteColumn,
     updateColumn,
     createTask,
     tasks,
-      deleteTask,
-    
+    deleteTask,
     updateTask,
   } = props;
 
@@ -86,7 +77,6 @@ function ColumnContainer(props: Props) {
       style={style}
       className="w-[350px] max-h-[500px] rounded-md h-[500px] flex flex-col"
     >
-      {/* Title */}
       <div
         {...attributes}
         {...listeners}
@@ -101,18 +91,18 @@ function ColumnContainer(props: Props) {
             className="flex justify-center items-center px-2 py-1 text-sm rounded-full"
             style={{ backgroundColor: "#0D1117" }}
           >
-            0
+            {tasks.length}
           </div>
           <input
-            ref={columnNameRef} 
+            ref={columnNameRef}
             className="bg-black focus:border-rose-500 border rounded outline-none px-2"
             defaultValue={column.title}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleUpdateColumn(); 
+                handleUpdateColumn();
               }
             }}
-            onBlur={handleUpdateColumn} 
+            onBlur={handleUpdateColumn}
           />
         </div>
         <button
@@ -122,8 +112,6 @@ function ColumnContainer(props: Props) {
           <DeleteIcon />
         </button>
       </div>
-
-      {/* Content */}
       <div className="flex flex-grow flex-col gap-3 p-2 overflow-x-hidden overflow-y-auto">
         <SortableContext items={taskId}>
           {tasks.map((task) => (

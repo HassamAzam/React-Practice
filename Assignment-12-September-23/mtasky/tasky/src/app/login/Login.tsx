@@ -12,9 +12,8 @@ interface IFormInput {
   password: string | undefined;
 }
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
   const router = useRouter();
-
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<IFormInput>({ email: "", password: "" });
