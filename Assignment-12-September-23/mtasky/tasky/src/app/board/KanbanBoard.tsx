@@ -36,6 +36,7 @@ import Navbar from "./Navbar";
 import useDocumentTitle from "../titleHook";
 
 const KanbanBoard = () => {
+  useDocumentTitle("Board");
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
@@ -47,7 +48,7 @@ const KanbanBoard = () => {
       redirect("/login");
     }
   }, []);
-  useDocumentTitle("Board")
+
   const createTask = async (columnId: string) => {
     if (loggedInUser) {
       const newTask: TaskType = {
@@ -119,14 +120,6 @@ const KanbanBoard = () => {
     setTasks(newTasks);
   };
 
-  const onDragStart = (event: DragStartEvent) => {
-    if (event.active.data.current?.type === "Column") {
-      setActiveColumn(event.active.data.current.column);
-    } else if (event.active.data.current?.type === "Task") {
-      setActiveTask(event.active.data.current.task);
-    }
-  };
-
   const updateTask = async (id: string, content: string, columnId: string) => {
     if (loggedInUser) {
       await updateCardFromDb(
@@ -158,6 +151,13 @@ const KanbanBoard = () => {
   const deleteTask = (id: string) => {
     const newTask = tasks.filter((task) => task.id !== id);
     setTasks(newTask);
+  };
+  const onDragStart = (event: DragStartEvent) => {
+    if (event.active.data.current?.type === "Column") {
+      setActiveColumn(event.active.data.current.column);
+    } else if (event.active.data.current?.type === "Task") {
+      setActiveTask(event.active.data.current.task);
+    }
   };
 
   const onDragEnd = (event: DragEndEvent) => {

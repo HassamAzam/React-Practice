@@ -9,15 +9,18 @@ import {
   transformDbDataTask,
 } from "@/utilities/struturizeData";
 
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error(
+    "Supabase URL or key is not defined in the environment variables."
+  );
+}
 const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function fetchUsers() {
   const { data: users, error } = await supabase.from("users").select("*");
 
   if (error) {
     return;
   }
-
 }
 
 export async function insertUser(userObj: {
@@ -52,7 +55,6 @@ export async function authenticateUser(userObj: {
   if (users) {
     const pass = users[0].password;
     if (pass === userObj.password) {
-  
       return userObj.email;
     } else {
       return "";
@@ -113,8 +115,11 @@ export async function addCard(
 }
 
 export const updateCardFromDb = async (
-  
-cardId: string, cardDescription: string, email:string,columndId: string,date:string 
+  cardId: string,
+  cardDescription: string,
+  email: string,
+  columndId: string,
+  date: string
 ) => {
   const { data: cards, error } = await supabase
     .from("cards")
@@ -122,7 +127,7 @@ cardId: string, cardDescription: string, email:string,columndId: string,date:str
       description: cardDescription,
       updatedBy: email,
       column_id: columndId,
-      created_at:date
+      created_at: date,
     })
     .eq("id", cardId)
     .select();
