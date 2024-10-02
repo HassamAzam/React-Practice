@@ -1,4 +1,5 @@
 "use server";
+
 import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { redirect } from "next/navigation";
@@ -14,20 +15,22 @@ if (!supabaseUrl || !supabaseKey) {
     "Supabase URL or key is not defined in the environment variables."
   );
 }
+
 const supabase = createClient(supabaseUrl, supabaseKey);
-export async function fetchUsers() {
+
+export const fetchUsers = async () => {
   const { data: users, error } = await supabase.from("users").select("*");
 
   if (error) {
     return;
   }
-}
+};
 
-export async function insertUser(userObj: {
+export const insertUser = async (userObj: {
   name: string | undefined;
   email: string | undefined;
   password: string | undefined;
-}) {
+}) => {
   const { data, error } = await supabase
     .from("users")
     .insert([
@@ -41,17 +44,17 @@ export async function insertUser(userObj: {
     .select();
 
   redirect("/Login");
-}
+};
 
-export async function authenticateUser(userObj: {
+export const authenticateUser = async (userObj: {
   email: string | undefined;
   password: string | undefined;
-}) {
-  let { data: users } = await supabase
+}) => {
+  const { data: users } = await supabase
     .from("users")
     .select("*")
-
     .eq("email", userObj.email);
+
   if (users) {
     const pass = users[0].password;
     if (pass === userObj.password) {
@@ -60,10 +63,10 @@ export async function authenticateUser(userObj: {
       return "";
     }
   }
-}
+};
 
-export async function getColumns(email: string) {
-  let { data: columns } = await supabase
+export const getColumns = async (email: string) => {
+  const { data: columns } = await supabase
     .from("columns")
     .select("*")
     .eq("userEmail", email);
@@ -72,35 +75,37 @@ export async function getColumns(email: string) {
     const columnStruturizedData = transformDbDataColumn(columns);
     return columnStruturizedData;
   }
-}
-export async function getCards(email: string) {
-  let { data: cards, error } = await supabase
+};
+
+export const getCards = async (email: string) => {
+  const { data: cards, error } = await supabase
     .from("cards")
     .select("*")
     .eq("email", email);
+
   if (cards) {
     const taskStruturizedData = transformDbDataTask(cards);
     return taskStruturizedData;
   }
-}
+};
 
-export async function sendColumn(
+export const sendColumn = async (
   columnId: string,
   email: string,
   columnTitle: string
-) {
+) => {
   const { data: columns, error } = await supabase
     .from("columns")
     .insert([{ id: columnId, userEmail: email, title: columnTitle }])
     .select();
-}
+};
 
-export async function addCard(
+export const addCard = async (
   cardId: string,
   columnId: string,
   cardDescription: string,
   email: string
-) {
+) => {
   const { data: cards, error } = await supabase
     .from("cards")
     .insert([
@@ -112,7 +117,7 @@ export async function addCard(
       },
     ])
     .select();
-}
+};
 
 export const updateCardFromDb = async (
   cardId: string,
@@ -132,6 +137,7 @@ export const updateCardFromDb = async (
     .eq("id", cardId)
     .select();
 };
+
 export const updateColumnNameFromDb = async (
   columnId: string,
   columnTitle: string
@@ -142,12 +148,14 @@ export const updateColumnNameFromDb = async (
     .eq("id", columnId)
     .select();
 };
+
 export const deleteColumnFromDb = async (columnId: string) => {
   const { error } = await supabase.from("columns").delete().eq("id", columnId);
   if (error) {
   } else {
   }
 };
+
 export const deleteTaskFromDb = async (taskId: string) => {
   const { error } = await supabase.from("cards").delete().eq("id", taskId);
 };

@@ -31,16 +31,19 @@ import { getFormattedDate } from "@/utilities/utilties";
 import { ContainerType } from "@/utilities/Enums";
 import PlusIcon from "@/Icons/PlusIcon";
 import { ColumnType, TaskType } from "@/types";
-import ColumnContainer from "./ColumnContainer";
-import TaskCard from "./Card";
+import ColumnContainer from "@/app/board/ColumnContainer";
+import TaskCard from "@/app/board/Card";
 import React from "react";
-import Navbar from "./Navbar";
-import useDocumentTitle from "../titleHook";
+import Navbar from "@/app/board/Navbar";
+import useDocumentTitle from "@/app/titleHook";
 
 const KanbanBoard = () => {
   useDocumentTitle("Board");
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [columns, setColumns] = useState<ColumnType[]>([]);
+  const [activeColumn, setActiveColumn] = useState<ColumnType | null>(null);
+  const [activeTask, setActiveTask] = useState<TaskType | null>(null);
 
   useEffect(() => {
     const email = sessionStorage.getItem("loggedInUser");
@@ -50,6 +53,24 @@ const KanbanBoard = () => {
       redirect("/login");
     }
   }, []);
+
+  useEffect(() => {
+    if (loggedInUser) {
+      const fetchColumns = async () => {
+        const columnsFromDb = await getColumns(loggedInUser);
+        const taskFromDb = await getCards(loggedInUser);
+        if (columnsFromDb) {
+          setColumns(columnsFromDb);
+          if (taskFromDb) {
+            setTasks(taskFromDb);
+          }
+        }
+      };
+      fetchColumns();
+    }
+  }, [loggedInUser]);
+
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   const createTask = async (columnId: string) => {
     if (loggedInUser) {
@@ -70,10 +91,6 @@ const KanbanBoard = () => {
     }
   };
 
-  const [columns, setColumns] = useState<ColumnType[]>([]);
-  const [activeColumn, setActiveColumn] = useState<ColumnType | null>(null);
-  const [activeTask, setActiveTask] = useState<TaskType | null>(null);
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -82,23 +99,6 @@ const KanbanBoard = () => {
     })
   );
 
-  useEffect(() => {
-    if (loggedInUser) {
-      const fetchColumns = async () => {
-        const columnsFromDb = await getColumns(loggedInUser);
-        const taskFromDb = await getCards(loggedInUser);
-        if (columnsFromDb) {
-          setColumns(columnsFromDb);
-          if (taskFromDb) {
-            setTasks(taskFromDb);
-          }
-        }
-      };
-      fetchColumns();
-    }
-  }, [loggedInUser]);
-
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const handleLogout = () => {
     sessionStorage.removeItem("loggedInUser");
   };

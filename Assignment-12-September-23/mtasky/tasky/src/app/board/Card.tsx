@@ -8,10 +8,11 @@ import { CSS } from "@dnd-kit/utilities";
 import { Modal, Button, TextareaAutosize } from "@mui/material";
 
 import { CardProps } from "./interface";
+import { ContainerType } from "@/utilities/Enums";
 import DeleteIcon from "@/Icons/DeleteIcon";
 import { formatTimestamp } from "@/utilities/utilties";
 
-function TaskCard({ task, deleteTask, updateTask }: CardProps) {
+const TaskCard = ({ task, deleteTask, updateTask }: CardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const taskContent = useRef("");
 
@@ -25,7 +26,7 @@ function TaskCard({ task, deleteTask, updateTask }: CardProps) {
   } = useSortable({
     id: task.id,
     data: {
-      type: "Task",
+      type: ContainerType.Task,
       task,
     },
   });
@@ -116,6 +117,6 @@ function TaskCard({ task, deleteTask, updateTask }: CardProps) {
       </Modal>
     </>
   );
-}
+};
 
 export default TaskCard;

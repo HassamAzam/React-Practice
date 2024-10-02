@@ -6,13 +6,14 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import DeleteIcon from "@/Icons/DeleteIcon";
+import { ContainerType } from "@/utilities/Enums";
 import { ColumnProps } from "./interface";
 import PlusIcon from "@/Icons/PlusIcon";
 import TaskCard from "@/app/board/Card";
 
 import { useRef } from "react";
 
-function ColumnContainer(props: ColumnProps) {
+const ColumnContainer = (props: ColumnProps) => {
   const {
     column,
     deleteColumn,
@@ -37,7 +38,7 @@ function ColumnContainer(props: ColumnProps) {
   } = useSortable({
     id: column.id,
     data: {
-      type: "Column",
+      type: ContainerType.Column,
       column,
     },
   });
@@ -133,6 +134,6 @@ function ColumnContainer(props: ColumnProps) {
       </button>
     </div>
   );
-}
+};
 
 export default ColumnContainer;

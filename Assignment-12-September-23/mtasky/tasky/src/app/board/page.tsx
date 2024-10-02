@@ -1,12 +1,12 @@
-import React from 'react'
-import KanbanBoard from './KanbanBoard'
+import React from "react";
+import KanbanBoard from "@/app/board/KanbanBoard";
 
-function Page() {
+const Page = () => {
   return (
     <div>
-      <KanbanBoard/>
+      <KanbanBoard />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
