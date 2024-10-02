@@ -14,6 +14,8 @@ import TaskCard from "@/app/board/Card";
 import { useRef } from "react";
 
 const ColumnContainer = (props: ColumnProps) => {
+  const columnNameRef = useRef<HTMLInputElement>(null);
+
   const {
     column,
     deleteColumn,
@@ -49,8 +51,6 @@ const ColumnContainer = (props: ColumnProps) => {
     backgroundColor: "#161D22",
     borderColor: "#0D1117",
   };
-
-  const columnNameRef = useRef<HTMLInputElement>(null);
 
   const handleCreateTask = () => {
     createTask(column.id);
