@@ -148,6 +148,6 @@ export const deleteColumnFromDb = async (columnId: string) => {
   } else {
   }
 };
-export const deleteTask = async (taskId: string) => {
+export const deleteTaskFromDb = async (taskId: string) => {
   const { error } = await supabase.from("cards").delete().eq("id", taskId);
 };

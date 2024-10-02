@@ -19,6 +19,7 @@ import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import {
   addCard,
   deleteColumnFromDb,
+  deleteTaskFromDb,
   getCards,
   getColumns,
   sendColumn,
@@ -27,6 +28,7 @@ import {
 } from "@/middleware/middleware";
 
 import { getFormattedDate } from "@/utilities/utilties";
+import { ContainerType } from "@/utilities/Enums";
 import PlusIcon from "@/Icons/PlusIcon";
 import { ColumnType, TaskType } from "@/types";
 import ColumnContainer from "./ColumnContainer";
@@ -41,7 +43,7 @@ const KanbanBoard = () => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
   useEffect(() => {
-    const email = sessionStorage.getItem("email");
+    const email = sessionStorage.getItem("loggedInUser");
     if (email) {
       setLoggedInUser(email);
     } else {
@@ -98,7 +100,7 @@ const KanbanBoard = () => {
 
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const handleLogout = () => {
-    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("loggedInUser");
   };
 
   const createNewColumn = async () => {
@@ -148,14 +150,16 @@ const KanbanBoard = () => {
     );
   };
 
-  const deleteTask = (id: string) => {
-    const newTask = tasks.filter((task) => task.id !== id);
+  const deleteTask = (cardId: string) => {
+    const newTask = tasks.filter((task) => task.id !== cardId);
     setTasks(newTask);
+    const [{ id }]: TaskType[] = tasks.filter((task) => task.id === cardId);
+    deleteTaskFromDb(id);
   };
   const onDragStart = (event: DragStartEvent) => {
-    if (event.active.data.current?.type === "Column") {
+    if (event.active.data.current?.type === ContainerType.Column) {
       setActiveColumn(event.active.data.current.column);
-    } else if (event.active.data.current?.type === "Task") {
+    } else if (event.active.data.current?.type === ContainerType.Task) {
       setActiveTask(event.active.data.current.task);
     }
   };
@@ -164,13 +168,15 @@ const KanbanBoard = () => {
     const { active, over } = event;
 
     const newTask = active.data.current?.task;
-    updateTask(newTask.id, newTask.content, newTask.columnId);
+    if (newTask) {
+      updateTask(newTask.id, newTask.content, newTask.columnId);
+    }
 
     setActiveTask(null);
     setActiveColumn(null);
 
     if (!over) return;
-    if (active.data.current?.type === "Column") {
+    if (active.data.current?.type === ContainerType.Column) {
       const activeColumnId = active.id;
       const overColumnId = over.id;
       if (activeColumnId === overColumnId) return;
@@ -189,7 +195,7 @@ const KanbanBoard = () => {
         return columns;
       });
     }
-    if (active.data.current?.type === "Task") {
+    if (active.data.current?.type === ContainerType.Task) {
       const activeTaskId = active.id;
       const overTaskId = over.id;
       if (activeTaskId === overTaskId) {
@@ -214,8 +220,8 @@ const KanbanBoard = () => {
     const overId = over.id;
     if (activeId === overId) return;
 
-    const isActiveTask = active.data.current?.type === "Task";
-    const isOverTask = over.data.current?.type === "Task";
+    const isActiveTask = active.data.current?.type === ContainerType.Task;
+    const isOverTask = over.data.current?.type === ContainerType.Task;
 
     if (!isActiveTask) return;
 
@@ -231,7 +237,7 @@ const KanbanBoard = () => {
       });
     }
 
-    const isOverAColumn = over.data.current?.type === "Column";
+    const isOverAColumn = over.data.current?.type === ContainerType.Column;
     if (isActiveTask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);

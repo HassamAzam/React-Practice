@@ -59,7 +59,7 @@ const LoginPage = () => {
       const user = await authenticateUser({ email, password });
       if (user == undefined || user == null) {
       } else {
-        sessionStorage.setItem("email", user);
+        sessionStorage.setItem("loggedInUser", user);
         router.push("/board");
       }
     }
